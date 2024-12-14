@@ -1,0 +1,9 @@
+{
+    "cpp": { "name": "C++", "template": "#include <iostream>\nusing namespace std; \n\nint main() {\n    return 0;\n}" },
+    "java": { "name": "Java", "template": "public class Main {\n    public static void main(String[] args) {\n        System.out.println(\"Hello, World!\");\n    }\n}" },
+    "py": { "name": "Python", "template": "print(\"Hello, World!\")" },
+    "c": { "name": "C", "template": "#include <stdio.h>\nint main() {\n    printf(\"Hello, World!\");\n    return 0;\n}" },
+    "go": { "name": "Go", "template": "package main\nimport \"fmt\"\nfunc main() {\n    fmt.Println(\"Hello, World!\")\n}" },
+    "cs": { "name": "C#", "template": "using System;\nclass Program {\n    static void Main() {\n        Console.WriteLine(\"Hello, World!\");\n    }\n}" }
+  }
+  

@@ -17,7 +17,7 @@ async function runCode({language = "", code = "", input = ""}) {
     if (!supportedLanguages.includes(language))
         throw {
             status: 400,
-            error: `Please enter a valid language, Check /list for langauges.`
+            error: `Please enter a valid language, Check /list for Supported langauges.`
         }
 
     const {jobID} = await createCodeFile(language, code);

@@ -31,6 +31,10 @@ app.post("/", async (req, res) => {
     }
 })
 
+app.get('/test', async (res, req) => {
+    sendResponse(200, "OK")
+})
+
 app.get('/list', async (req, res) => {
     const body = []
 

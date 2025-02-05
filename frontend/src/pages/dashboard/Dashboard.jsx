@@ -2,6 +2,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import { Card, Avatar, Label, TextInput, Button, Modal, Table } from 'flowbite-react';
 import { AuthContext } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import axiosInstance from '../../utils/axiosInstance';
 
 const getUserData = async () => {
     try {
@@ -87,11 +88,11 @@ const Dashboard = () => {
           <Avatar img={user.avatar} size="xl" />
           <div>
             <h2 className="text-xl font-bold">{user.username}</h2>
-            <p>{user.name || 'No Name Provided'}</p>
-            <p>{user.email || 'No email available'}</p>
-            <p>{user.phone || 'No phone available'}</p>
-            <p>{user.cf_handle || 'No Codeforces handle'}</p>
-            <p>{user.isAdmin ? 'Admin' : 'User'}</p>
+            <p>Name: {user.name || 'No Name Provided'}</p>
+            <p>Email: {user.email || 'No email available'}</p>
+            <p>Phone Number: {user.phone || 'No phone available'}</p>
+            <p>Codefroces Handle: {user.cf_handle || 'No Codeforces handle'}</p>
+            <p>Role: {user.isAdmin ? 'Admin' : 'User'}</p>
           </div>
         </div>
         <div className="mt-4">

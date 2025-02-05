@@ -6,6 +6,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import templates from "../../../templates.json";
 import axios from "axios";
+import axiosInstance from "../../../utils/axiosInstance";
 import { Modal } from "flowbite-react";
 
 const CodeEditor = ({ problem }) => {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import ProblemDescription from "../../components/workspace/problem-dis/ProblemDescription";
 import CodeEditor from "../../components/workspace/code-editor/CodeEditor";
+import axiosInstance from "../../utils/axiosInstance";
 
 const Workspace = () => {
   const { problemId } = useParams();

@@ -7,6 +7,8 @@ const adminRoutes = require('./src/routes/adminRoutes');
 const generalRoutes = require('./src/routes/generalRoutes');
 const errorHandler = require('./src/middlewares/errorHandler');
 const compilerRoutes = require('./src/routes/compilerRoutes');
+const submissionRoutes = require('./src/routes/submissionRoutes');
+
 
 require('dotenv').config();
 
@@ -25,6 +27,8 @@ app.use('/api', generalRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/compiler', compilerRoutes);
+app.use('/api/submissions', submissionRoutes);
+app.use('/api/submissions', submissionRoutes);
 
 // Error handling middleware
 app.use(errorHandler);

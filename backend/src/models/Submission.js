@@ -6,7 +6,7 @@ const submissionSchema = new mongoose.Schema({
     time: { type: Number, required: true },
     code: { type: String, required: true },
     accepted: { type: Boolean, required: true },
-    failedTestcase: { type: Number, required: true },
+    failedTestcase: { type: Number},
 });
 
 module.exports = mongoose.model('Submission', submissionSchema);

@@ -1,6 +1,28 @@
-import React, { useContext, useState } from 'react';
-import { Card, Avatar, Label, TextInput, Button, Modal } from 'flowbite-react';
+import React, { useContext, useState, useEffect } from 'react';
+import { Card, Avatar, Label, TextInput, Button, Modal, Table } from 'flowbite-react';
+import axios from 'axios';
 import { AuthContext } from '../../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
+
+const getUserData = async () => {
+    try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            console.log("admin panel error: no token found");
+            throw new Error('No token found. Please log in.');
+        }
+        const apiUrl = 'http://localhost:3000/api/get-user';
+        const response = await axios.get(apiUrl, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching user data:', error);
+        throw error;
+    }
+};
 
 const Dashboard = () => {
   const { user } = useContext(AuthContext);
@@ -9,11 +31,35 @@ const Dashboard = () => {
   const [imageLink, setImageLink] = useState(user?.avatar || '');
   const [phone, setPhone] = useState(user?.phone || '');
   const [codeforcesHandle, setCodeforcesHandle] = useState(user?.cf_handle || '');
-  const placeholderAvatar = 'https://www.gravatar.com/avatar/?d=identicon';
+  const [submissions, setSubmissions] = useState([]);
+  const [selectedTestCase, setSelectedTestCase] = useState(null);
+  const navigate = useNavigate();
 
-  if (!user) {
-    return <div>Loading...</div>;
-  }
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const userData = await getUserData();
+        setName(userData.name);
+        setImageLink(userData.avatar);
+        setPhone(userData.phone);
+        setCodeforcesHandle(userData.cf_handle);
+        fetchUserSubmissions(userData._id);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
+    const fetchUserSubmissions = async (userId) => {
+      try {
+        const response = await axios.get(`http://localhost:3000/api/submissions/user/${userId}`);
+        setSubmissions(response.data);
+      } catch (error) {
+        console.error('Error fetching user submissions:', error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   const handleEditProfile = () => {
     setIsModalOpen(true);
@@ -22,6 +68,19 @@ const Dashboard = () => {
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
+
+  const handleProblemClick = (problemId) => {
+    navigate(`/problem/${problemId}`);
+  };
+
+  const handleFailedTestCaseClick = (testCase) => {
+    setSelectedTestCase(testCase);
+    setIsModalOpen(true);
+  };
+
+  if (!user) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="container mx-auto p-4">
@@ -51,51 +110,91 @@ const Dashboard = () => {
         </Button>
       </Card>
 
+      <Card className="mt-4">
+        <h2 className="text-xl font-bold mb-4">Submissions</h2>
+        <Table>
+          <Table.Head>
+            <Table.HeadCell>Problem Name</Table.HeadCell>
+            <Table.HeadCell>Time</Table.HeadCell>
+            <Table.HeadCell>Accepted</Table.HeadCell>
+            <Table.HeadCell>Failed Testcase</Table.HeadCell>
+          </Table.Head>
+          <Table.Body>
+            {submissions.map((submission) => (
+              <Table.Row key={submission._id}>
+                <Table.Cell>
+                  <button onClick={() => handleProblemClick(submission.problem._id)}>
+                    {submission.problem.name}
+                  </button>
+                </Table.Cell>
+                <Table.Cell>{new Date(submission.time).toLocaleString()}</Table.Cell>
+                <Table.Cell>{submission.accepted ? 'Yes' : 'No'}</Table.Cell>
+                <Table.Cell>
+                  {submission.failedTestcase !== null ? (
+                    <button onClick={() => handleFailedTestCaseClick(submission.failedTestcase)}>
+                      {submission.failedTestcase}
+                    </button>
+                  ) : 'N/A'}
+                </Table.Cell>
+              </Table.Row>
+            ))}
+          </Table.Body>
+        </Table>
+      </Card>
+
       <Modal show={isModalOpen} onClose={handleCloseModal}>
-        <Modal.Header>Edit Profile</Modal.Header>
+        <Modal.Header>{selectedTestCase ? 'Failed Testcase Info' : 'Edit Profile'}</Modal.Header>
         <Modal.Body>
-          <div className="space-y-6">
+          {selectedTestCase ? (
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700">Name</label>
-              <input
-                type="text"
-                id="name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              />
+              <p><strong>Input:</strong> {selectedTestCase.input}</p>
+              <p><strong>Expected Output:</strong> {selectedTestCase.expectedOutput}</p>
+              <p><strong>Actual Output:</strong> {selectedTestCase.actualOutput}</p>
             </div>
-            <div>
-              <label htmlFor="imageLink" className="block text-sm font-medium text-gray-700">Image Link</label>
-              <input
-                type="text"
-                id="imageLink"
-                value={imageLink}
-                onChange={(e) => setImageLink(e.target.value)}
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              />
+          ) : (
+            <div className="space-y-6">
+              <div>
+                <label htmlFor="name" className="block text-sm font-medium text-gray-700">Name</label>
+                <input
+                  type="text"
+                  id="name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                />
+              </div>
+              <div>
+                <label htmlFor="imageLink" className="block text-sm font-medium text-gray-700">Image Link</label>
+                <input
+                  type="text"
+                  id="imageLink"
+                  value={imageLink}
+                  onChange={(e) => setImageLink(e.target.value)}
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                />
+              </div>
+              <div>
+                <label htmlFor="phone" className="block text-sm font-medium text-gray-700">Phone</label>
+                <input
+                  type="text"
+                  id="phone"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                />
+              </div>
+              <div>
+                <label htmlFor="codeforcesHandle" className="block text-sm font-medium text-gray-700">Codeforces Handle</label>
+                <input
+                  type="text"
+                  id="codeforcesHandle"
+                  value={codeforcesHandle}
+                  onChange={(e) => setCodeforcesHandle(e.target.value)}
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                />
+              </div>
             </div>
-            <div>
-              <label htmlFor="phone" className="block text-sm font-medium text-gray-700">Phone</label>
-              <input
-                type="text"
-                id="phone"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              />
-            </div>
-            <div>
-              <label htmlFor="codeforcesHandle" className="block text-sm font-medium text-gray-700">Codeforces Handle</label>
-              <input
-                type="text"
-                id="codeforcesHandle"
-                value={codeforcesHandle}
-                onChange={(e) => setCodeforcesHandle(e.target.value)}
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              />
-            </div>
-          </div>
+          )}
         </Modal.Body>
         <Modal.Footer>
           <Button onClick={handleCloseModal}>Close</Button>

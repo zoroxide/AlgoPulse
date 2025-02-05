@@ -1,6 +1,7 @@
 const Problem = require('../../models/Problem');
 const User = require('../../models/User');
 const fetch = require('node-fetch');
+const Submission = require('../../models/Submission');
 
 module.exports = {
     compileCode: async (req, res) => {
@@ -54,6 +55,17 @@ module.exports = {
                 user.score += 2;
                 await user.save();
             }
+
+            // Save submission
+            const newSubmission = new Submission({
+                user: userID,
+                problem: problemID,
+                time: Date.now(),
+                code,
+                accepted: allPassed,
+                failedTestcase: allPassed ? null : results.findIndex(result => !result.passed),
+            });
+            await newSubmission.save();
 
             res.json({ results, allPassed });
         } catch (err) {

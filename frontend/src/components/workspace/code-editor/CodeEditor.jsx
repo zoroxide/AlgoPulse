@@ -16,6 +16,26 @@ const CodeEditor = ({ problem }) => {
   const [testResults, setTestResults] = useState([]);
   const [openModal, setOpenModal] = useState(false);
 
+  const getUserData = async () => {
+    try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            console.log("admin panel error: no token found");
+            throw new Error('No token found. Please log in.');
+        }
+        const apiUrl = 'http://localhost:3000/api/get-user';
+        const response = await axios.get(apiUrl, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching user data:', error);
+        throw error;
+    }
+  };
+
   const handleThemeToggle = () => {
     setTheme(theme === "vs-dark" ? "vs-light" : "vs-dark");
   };
@@ -71,51 +91,64 @@ const CodeEditor = ({ problem }) => {
 
   const handleRunAllTestCases = async () => {
     if (!problem || !problem.testcases || problem.testcases.length === 0) {
-      toast.error("No test cases available for this problem.");
-      return;
+        toast.error("No test cases available for this problem.");
+        return;
     }
-  
+
     setIsLoading(true);
     setTestResults([]);
     setOpenModal(true);
-  
+
     try {
-      const results = await Promise.all(
-        problem.testcases.map(async (testCase) => {
-          try {
-            const response = await axios.post("http://localhost:8080/", {
-              code,
-              language,
-              input: testCase.inputs.join("\n"),
-            });
-  
-            const actualOutput = response.data.output.trim();
-            const expectedOutput = testCase.outputs[0].trim();
-  
-            return {
-              input: testCase.inputs.join("\n"),
-              expectedOutput,
-              actualOutput,
-              passed: actualOutput === expectedOutput,
-            };
-          } catch (error) {
-            console.error("Error executing test case:", error);
-            return {
-              input: testCase.inputs.join("\n"),
-              expectedOutput: testCase.outputs[0].trim(),
-              actualOutput: "Error during execution",
-              passed: false,
-            };
-          }
-        })
-      );
-  
-      setTestResults(results);
+        const user = await getUserData();
+
+        const results = await Promise.all(
+            problem.testcases.map(async (testCase) => {
+                try {
+                    const response = await axios.post("http://localhost:8080/", {
+                        code,
+                        language,
+                        input: testCase.inputs.join("\n"),
+                    });
+
+                    const actualOutput = response.data.output.trim();
+                    const expectedOutput = testCase.outputs[0].trim();
+
+                    return {
+                        input: testCase.inputs.join("\n"),
+                        expectedOutput,
+                        actualOutput,
+                        passed: actualOutput === expectedOutput,
+                    };
+                } catch (error) {
+                    console.error("Error executing test case:", error);
+                    return {
+                        input: testCase.inputs.join("\n"),
+                        expectedOutput: testCase.outputs[0].trim(),
+                        actualOutput: "Error during execution",
+                        passed: false,
+                    };
+                }
+            })
+        );
+
+        const allPassed = results.every(result => result.passed);
+
+        // Save submission
+        await axios.post("http://localhost:3000/api/submissions/create", {
+            user: user._id,
+            problem: problem._id,
+            time: Date.now(),
+            code,
+            accepted: allPassed,
+            failedTestcase: allPassed ? null : results.findIndex(result => !result.passed),
+        });
+
+        setTestResults(results);
     } catch (error) {
-      console.error("Error running all test cases:", error);
-      toast.error("An error occurred while running test cases.");
+        console.error("Error running all test cases:", error);
     } finally {
-      setIsLoading(false);
+        setIsLoading(false);
     }
   };
   

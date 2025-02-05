@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
 import ProblemDescription from "../../components/workspace/problem-dis/ProblemDescription";
 import CodeEditor from "../../components/workspace/code-editor/CodeEditor";
 
@@ -30,7 +29,7 @@ const Workspace = () => {
   useEffect(() => {
     const fetchProblem = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/api/problems/${problemId}`);
+        const response = await axiosInstance.get(`/problems/${problemId}`);
         setProblem(response.data);
       } catch (error) {
         console.error("Error fetching problem data:", error);

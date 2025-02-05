@@ -1,23 +1,15 @@
 import React, { createContext, useState, useEffect } from 'react';
 import axiosInstance from '../utils/axiosInstance';
 
-export const AuthContext = createContext();
+const AuthContext = createContext();
 
-export const AuthProvider = ({ children }) => {
+const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(localStorage.getItem('token') || '');
 
-  const login = async (credentials) => {
-    try {
-      const response = await axiosInstance.post('/user/login', credentials);
-      const { token, user } = response.data;
-      localStorage.setItem('token', token);
-      setToken(token);
-      setUser(user);
-    } catch (error) {
-      console.error('Login failed:', error.response?.data || error.message);
-      throw error;
-    }
+  const login = (newToken) => {
+    localStorage.setItem('token', newToken);
+    setToken(newToken);
   };
 
   const logout = () => {
@@ -47,3 +39,5 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
+
+export { AuthContext, AuthProvider };

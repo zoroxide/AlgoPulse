@@ -1,6 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { Card, Avatar, Label, TextInput, Button, Modal, Table } from 'flowbite-react';
-import axios from 'axios';
 import { AuthContext } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
@@ -11,8 +10,7 @@ const getUserData = async () => {
             console.log("admin panel error: no token found");
             throw new Error('No token found. Please log in.');
         }
-        const apiUrl = 'http://localhost:3000/api/get-user';
-        const response = await axios.get(apiUrl, {
+        const response = await axiosInstance.get('/get-user', {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -51,7 +49,7 @@ const Dashboard = () => {
 
     const fetchUserSubmissions = async (userId) => {
       try {
-        const response = await axios.get(`http://localhost:3000/api/submissions/user/${userId}`);
+        const response = await axiosInstance.get(`/submissions/user/${userId}`);
         setSubmissions(response.data);
       } catch (error) {
         console.error('Error fetching user submissions:', error);

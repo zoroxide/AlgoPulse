@@ -26,11 +26,8 @@ const getUserData = async () => {
       throw new Error('No token found. Please log in.');
     }
 
-    // Define the API URL for the get-user endpoint
-    const apiUrl = 'http://localhost:3000/api/get-user';
-
     // Make the request to the get-user endpoint
-    const response = await axiosInstance.get(apiUrl, {
+    const response = await axiosInstance.get('/get-user', {
       headers: {
         Authorization: `Bearer ${token}`, // Include the token in the Authorization header
       },

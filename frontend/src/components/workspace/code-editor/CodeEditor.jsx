@@ -23,8 +23,7 @@ const CodeEditor = ({ problem }) => {
             console.log("admin panel error: no token found");
             throw new Error('No token found. Please log in.');
         }
-        const apiUrl = 'http://localhost:3000/api/get-user';
-        const response = await axios.get(apiUrl, {
+        const response = await axiosInstance.get('/get-user', {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -135,7 +134,7 @@ const CodeEditor = ({ problem }) => {
         const allPassed = results.every(result => result.passed);
 
         // Save submission
-        await axios.post("http://localhost:3000/api/submissions/create", {
+        await axiosInstance.post("/submissions/create", {
             user: user._id,
             problem: problem._id,
             time: Date.now(),

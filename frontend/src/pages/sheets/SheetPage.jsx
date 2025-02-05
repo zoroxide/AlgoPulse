@@ -4,7 +4,6 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Spinner, Alert, Button, Modal, Table } from 'flowbite-react';
 import axiosInstance from '../../utils/axiosInstance';
-import axios from 'axios';
 import { AuthContext } from '../../context/AuthContext';
 
 const getUserData = async () => {
@@ -14,8 +13,7 @@ const getUserData = async () => {
             console.log("admin panel error: no token found");
             throw new Error('No token found. Please log in.');
         }
-        const apiUrl = 'http://localhost:3000/api/get-user';
-        const response = await axios.get(apiUrl, {
+        const response = await axiosInstance.get('/get-user', {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -58,7 +56,7 @@ const SheetPage = () => {
         const fetchUserSubmissions = async () => {
             try {
                 const userData = await getUserData();
-                const response = await axios.get(`http://localhost:3000/api/submissions/user/${userData._id}`);
+                const response = await axiosInstance.get(`/submissions/user/${userData._id}`);
                 setSubmissions(response.data);
             } catch (error) {
                 console.error('Error fetching user submissions:', error);
@@ -102,7 +100,7 @@ const SheetPage = () => {
 
     const handleShowSubmissions = async (problemId) => {
         try {
-            const response = await axios.get(`http://localhost:3000/api/submissions/problem/${problemId}`);
+            const response = await axiosInstance.get(`/submissions/problem/${problemId}`);
             setSelectedProblemSubmissions(response.data);
             setIsModalOpen(true);
         } catch (error) {

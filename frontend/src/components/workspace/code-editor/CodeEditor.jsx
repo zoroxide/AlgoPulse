@@ -1,5 +1,5 @@
 import { Button } from "flowbite-react";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { FaPlay, FaMoon, FaSun } from "react-icons/fa";
 import MonacoEditor from "@monaco-editor/react";
 import { toast, ToastContainer } from "react-toastify";
@@ -8,33 +8,16 @@ import templates from "../../../templates.json";
 import axios from "axios";
 import axiosInstance from "../../../utils/axiosInstance";
 import { Modal } from "flowbite-react";
+import { AuthContext } from '../../../context/AuthContext';
 
 const CodeEditor = ({ problem }) => {
+  const { user } = useContext(AuthContext);
   const [language, setLanguage] = useState("cpp");
   const [theme, setTheme] = useState("vs-dark");
   const [code, setCode] = useState(templates[language].template);
   const [isLoading, setIsLoading] = useState(false);
   const [testResults, setTestResults] = useState([]);
   const [openModal, setOpenModal] = useState(false);
-
-  const getUserData = async () => {
-    try {
-        const token = localStorage.getItem('token');
-        if (!token) {
-            console.log("admin panel error: no token found");
-            throw new Error('No token found. Please log in.');
-        }
-        const response = await axiosInstance.get('/get-user', {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
-        return response.data;
-    } catch (error) {
-        console.error('Error fetching user data:', error);
-        throw error;
-    }
-  };
 
   const handleThemeToggle = () => {
     setTheme(theme === "vs-dark" ? "vs-light" : "vs-dark");
@@ -100,8 +83,6 @@ const CodeEditor = ({ problem }) => {
     setOpenModal(true);
 
     try {
-        const user = await getUserData();
-
         const results = await Promise.all(
             problem.testcases.map(async (testCase) => {
                 try {

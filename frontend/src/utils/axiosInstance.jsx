@@ -1,16 +1,13 @@
 import axios from 'axios';
-
-console.log('Backend URL:', import.meta.env.BACKEND_URL);
-
-const apiURL = 'http://localhost:3000/api';
+import Cookies from 'js-cookie';
 
 const axiosInstance = axios.create({
-    baseURL: apiURL,
+    baseURL: 'http://localhost:3000/api',
     timeout: 5000,
 });
 
 axiosInstance.interceptors.request.use((config) => {
-    const token = localStorage.getItem('token');
+    const token = Cookies.get('token');
     if (token) {
         config.headers.Authorization = `Bearer ${token}`;
     }

@@ -3,25 +3,7 @@ import { Card, Avatar, Label, TextInput, Button, Modal, Table } from 'flowbite-r
 import { AuthContext } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../utils/axiosInstance';
-
-const getUserData = async () => {
-    try {
-        const token = localStorage.getItem('token');
-        if (!token) {
-            console.log("admin panel error: no token found");
-            throw new Error('No token found. Please log in.');
-        }
-        const response = await axiosInstance.get('/get-user', {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
-        return response.data;
-    } catch (error) {
-        console.error('Error fetching user data:', error);
-        throw error;
-    }
-};
+import MonacoEditor from '@monaco-editor/react';
 
 const Dashboard = () => {
   const { user } = useContext(AuthContext);
@@ -31,34 +13,28 @@ const Dashboard = () => {
   const [phone, setPhone] = useState(user?.phone || '');
   const [codeforcesHandle, setCodeforcesHandle] = useState(user?.cf_handle || '');
   const [submissions, setSubmissions] = useState([]);
-  const [selectedTestCase, setSelectedTestCase] = useState(null);
+  const [selectedSubmission, setSelectedSubmission] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const userData = await getUserData();
-        setName(userData.name);
-        setImageLink(userData.avatar);
-        setPhone(userData.phone);
-        setCodeforcesHandle(userData.cf_handle);
-        fetchUserSubmissions(userData._id);
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-      }
-    };
-
     const fetchUserSubmissions = async (userId) => {
       try {
         const response = await axiosInstance.get(`/submissions/user/${userId}`);
-        setSubmissions(response.data);
+        const sortedSubmissions = response.data.sort((a, b) => new Date(b.time) - new Date(a.time));
+        setSubmissions(sortedSubmissions);
       } catch (error) {
         console.error('Error fetching user submissions:', error);
       }
     };
 
-    fetchUserData();
-  }, []);
+    if (user) {
+      setName(user.name);
+      setImageLink(user.avatar);
+      setPhone(user.phone);
+      setCodeforcesHandle(user.cf_handle);
+      fetchUserSubmissions(user._id);
+    }
+  }, [user]);
 
   const handleEditProfile = () => {
     setIsModalOpen(true);
@@ -72,8 +48,8 @@ const Dashboard = () => {
     navigate(`/problem/${problemId}`);
   };
 
-  const handleFailedTestCaseClick = (testCase) => {
-    setSelectedTestCase(testCase);
+  const handleSubmissionClick = (submission) => {
+    setSelectedSubmission(submission);
     setIsModalOpen(true);
   };
 
@@ -117,10 +93,11 @@ const Dashboard = () => {
             <Table.HeadCell>Time</Table.HeadCell>
             <Table.HeadCell>Accepted</Table.HeadCell>
             <Table.HeadCell>Failed Testcase</Table.HeadCell>
+            <Table.HeadCell>Actions</Table.HeadCell>
           </Table.Head>
           <Table.Body>
             {submissions.map((submission) => (
-              <Table.Row key={submission._id}>
+              <Table.Row key={submission._id} className={submission.accepted ? 'bg-green-100' : 'bg-red-100'}>
                 <Table.Cell>
                   <button onClick={() => handleProblemClick(submission.problem._id)}>
                     {submission.problem.name}
@@ -130,10 +107,15 @@ const Dashboard = () => {
                 <Table.Cell>{submission.accepted ? 'Yes' : 'No'}</Table.Cell>
                 <Table.Cell>
                   {submission.failedTestcase !== null ? (
-                    <button onClick={() => handleFailedTestCaseClick(submission.failedTestcase)}>
+                    <button onClick={() => handleSubmissionClick(submission)}>
                       {submission.failedTestcase}
                     </button>
                   ) : 'N/A'}
+                </Table.Cell>
+                <Table.Cell>
+                  <Button onClick={() => handleSubmissionClick(submission)}>
+                    View Code
+                  </Button>
                 </Table.Cell>
               </Table.Row>
             ))}
@@ -142,13 +124,23 @@ const Dashboard = () => {
       </Card>
 
       <Modal show={isModalOpen} onClose={handleCloseModal}>
-        <Modal.Header>{selectedTestCase ? 'Failed Testcase Info' : 'Edit Profile'}</Modal.Header>
+        <Modal.Header>Submission Details</Modal.Header>
         <Modal.Body>
-          {selectedTestCase ? (
+          {selectedSubmission ? (
             <div>
-              <p><strong>Input:</strong> {selectedTestCase.input}</p>
-              <p><strong>Expected Output:</strong> {selectedTestCase.expectedOutput}</p>
-              <p><strong>Actual Output:</strong> {selectedTestCase.actualOutput}</p>
+              <p><strong>User:</strong> {selectedSubmission.user.username}</p>
+              <p><strong>Problem:</strong> {selectedSubmission.problem.name}</p>
+              <p><strong>Time:</strong> {new Date(selectedSubmission.time).toLocaleString()}</p>
+              <p><strong>Status:</strong> {selectedSubmission.accepted ? 'Accepted' : 'Rejected'}</p>
+              <p><strong>Code:</strong></p>
+              <MonacoEditor
+                height="400px"
+                language="cpp"
+                theme='vs-dark'
+                value={selectedSubmission.code}
+                options={{ readOnly: true }}
+              />
+              <p><strong>Failed Testcase:</strong> {selectedSubmission.failedTestcase !== null ? selectedSubmission.failedTestcase : 'N/A'}</p>
             </div>
           ) : (
             <div className="space-y-6">

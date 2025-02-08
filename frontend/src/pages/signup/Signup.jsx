@@ -27,7 +27,7 @@ const Signup = () => {
       });
   
       if (response.status === 201) {
-        setSuccess("Account created successfully! Please log in."); //shit
+        setSuccess("Account created successfully! Please log in."); // shit
         navigate("/login");
       }
     } catch (error) {

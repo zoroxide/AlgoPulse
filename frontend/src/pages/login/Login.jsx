@@ -6,39 +6,39 @@ import { Label } from "flowbite-react";
 import { TextInput } from "flowbite-react";
 import { Button } from "flowbite-react";
 import { Alert } from "flowbite-react";
+import axiosInstance from "../../utils/axiosInstance";
 
 const Login = () => {
-  const [username, setUsername] = useState('');
+  const { login } = useContext(AuthContext);
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const { login } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await login({ username, password });
+      const response = await axiosInstance.post('/user/login', { email, password });
+      login(response.data.token);
       navigate('/explore');
     } catch (err) {
-      console.error('Login failed:', err.response?.data || err.message);
-      setError(err.response?.data.message || 'Login failed.');
+      setError('Invalid email or password');
+      // console.error('Error logging in:', err);
     }
   };
-  
-      
   
     return (
       <div className="max-w-md mx-auto mt-10">
         <h2 className="text-2xl font-semibold mb-6">Login</h2>
         {error && <Alert color="failure">{error}</Alert>}
-        <form onSubmit={handleLogin} className="flex flex-col gap-4">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div>
-            <Label htmlFor="username" value="Username" />
+            <Label htmlFor="email" value="E-mail" />
             <TextInput
-              id="username"
+              id="email"
               type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               required
             />
           </div>

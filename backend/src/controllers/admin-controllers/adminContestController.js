@@ -10,7 +10,6 @@ exports.createContest = async (req, res) => {
       startTime,
       endTime,
       problems,
-      solvedProblems,
     } = req.body;
 
     if (new Date(startTime) >= new Date(endTime)) {
@@ -26,7 +25,6 @@ exports.createContest = async (req, res) => {
       startTime,
       endTime,
       problems,
-      solvedProblems,
     });
     await newContest.save();
     res.status(201).json({ message: "Contest created successfully!" });

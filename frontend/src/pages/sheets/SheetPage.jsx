@@ -5,25 +5,7 @@ import { Column } from 'primereact/column';
 import { Spinner, Alert, Button, Modal, Table } from 'flowbite-react';
 import axiosInstance from '../../utils/axiosInstance';
 import { AuthContext } from '../../context/AuthContext';
-
-const getUserData = async () => {
-    try {
-        const token = localStorage.getItem('token');
-        if (!token) {
-            console.log("admin panel error: no token found");
-            throw new Error('No token found. Please log in.');
-        }
-        const response = await axiosInstance.get('/get-user', {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
-        return response.data;
-    } catch (error) {
-        console.error('Error fetching user data:', error);
-        throw error;
-    }
-};
+import MonacoEditor from '@monaco-editor/react';
 
 const SheetPage = () => {
     const { user } = useContext(AuthContext);
@@ -55,19 +37,18 @@ const SheetPage = () => {
 
         const fetchUserSubmissions = async () => {
             try {
-                const userData = await getUserData();
-                const response = await axiosInstance.get(`/submissions/user/${userData._id}`);
+                const response = await axiosInstance.get(`/submissions/user/${user._id}`);
                 setSubmissions(response.data);
             } catch (error) {
                 console.error('Error fetching user submissions:', error);
             }
         };
 
-        if (sheetId) {
+        if (sheetId && user) {
             fetchSheet();
             fetchUserSubmissions();
         }
-    }, [sheetId]);
+    }, [sheetId, user]);
 
     const difficultyBodyTemplate = (rowData) => {
         const difficultyColors = {
@@ -83,9 +64,10 @@ const SheetPage = () => {
     };
 
     const submissionStatusTemplate = (rowData) => {
-        const submission = submissions.find(sub => sub.problem._id === rowData._id);
-        if (submission) {
-            return submission.accepted ? (
+        const userSubmissions = submissions.filter(sub => sub.problem._id === rowData._id);
+        if (userSubmissions.length > 0) {
+            const lastSubmission = userSubmissions[userSubmissions.length - 1];
+            return lastSubmission.accepted ? (
                 <span className="text-green-600">Accepted ✔</span>
             ) : (
                 <span className="text-red-600">Rejected ✘</span>
@@ -101,7 +83,8 @@ const SheetPage = () => {
     const handleShowSubmissions = async (problemId) => {
         try {
             const response = await axiosInstance.get(`/submissions/problem/${problemId}`);
-            setSelectedProblemSubmissions(response.data);
+            const sortedSubmissions = response.data.sort((a, b) => new Date(b.time) - new Date(a.time));
+            setSelectedProblemSubmissions(sortedSubmissions);
             setIsModalOpen(true);
         } catch (error) {
             console.error('Error fetching problem submissions:', error);
@@ -184,16 +167,18 @@ const SheetPage = () => {
                         <Table.Head>
                             <Table.HeadCell>User</Table.HeadCell>
                             <Table.HeadCell>Status</Table.HeadCell>
+                            <Table.HeadCell>Time</Table.HeadCell>
                             <Table.HeadCell>Actions</Table.HeadCell>
                         </Table.Head>
                         <Table.Body>
                             {selectedProblemSubmissions.map((submission) => (
-                                <Table.Row key={submission._id}>
+                                <Table.Row key={submission._id} className={submission.accepted ? 'bg-green-100' : 'bg-red-100'}>
                                     <Table.Cell>{submission.user.username}</Table.Cell>
                                     <Table.Cell>{submission.accepted ? 'Accepted' : 'Rejected'}</Table.Cell>
+                                    <Table.Cell>{new Date(submission.time).toLocaleString()}</Table.Cell>
                                     <Table.Cell>
                                         <Button onClick={() => handleSubmissionClick(submission)}>
-                                            View Details
+                                            View Code
                                         </Button>
                                     </Table.Cell>
                                 </Table.Row>
@@ -216,7 +201,13 @@ const SheetPage = () => {
                             <p><strong>Time:</strong> {new Date(selectedSubmission.time).toLocaleString()}</p>
                             <p><strong>Status:</strong> {selectedSubmission.accepted ? 'Accepted' : 'Rejected'}</p>
                             <p><strong>Code:</strong></p>
-                            <pre>{selectedSubmission.code}</pre>
+                            <MonacoEditor
+                                height="400px"
+                                language="cpp"
+                                theme='vs-dark'
+                                value={selectedSubmission.code}
+                                options={{ readOnly: true, theme: 'vs-dark' }}
+                            />
                             <p><strong>Failed Testcase:</strong> {selectedSubmission.failedTestcase !== null ? selectedSubmission.failedTestcase : 'N/A'}</p>
                         </div>
                     )}

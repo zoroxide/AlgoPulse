@@ -3,14 +3,7 @@ const Problem = require("../../models/Problem");
 
 exports.createContest = async (req, res) => {
   try {
-    const {
-      name,
-      difficulty,
-      description,
-      startTime,
-      endTime,
-      problems,
-    } = req.body;
+    const { name, difficulty, description, startTime, endTime } = req.body;
 
     if (new Date(startTime) >= new Date(endTime)) {
       return res
@@ -24,10 +17,9 @@ exports.createContest = async (req, res) => {
       description,
       startTime,
       endTime,
-      problems,
     });
     await newContest.save();
-    res.status(201).json({ message: "Contest created successfully!" });
+    res.status(201).json(newContest);
   } catch (err) {
     res.status(500).json({ message: "Failed to create contest", err });
     console.log(err);

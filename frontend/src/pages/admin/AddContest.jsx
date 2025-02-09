@@ -13,7 +13,6 @@ const AddContest = () => {
     const [description, setDescription] = useState("");
     const [difficulty, setDifficulty] = useState("");
     const [startTime, setStartTime] = useState("");
-    const [contest, setContest] = useState("");
     const [endTime, setEndTime] = useState("");
     const [problems, setProblems] = useState([]);
     const [error, setError] = useState('');
@@ -22,16 +21,12 @@ const AddContest = () => {
     useEffect(() => {
         const fetchAndCheckUser = async () => {
             try {
-                // Check if the user is an admin
                 if (!user || !user.isAdmin) {
-                    console.log("User is not an admin. Redirecting...");
-                    navigate('/login', { replace: true }); // Redirect to login or home page
-                } else {
-                    console.log("User is an admin. Access granted.");
+                    toast.error('Access denied. Admins only.');
+                    navigate('/login', { replace: true });
                 }
             } catch (error) {
                 console.error("Failed to perform admin check:", error);
-                // Optionally redirect to an error or login page
                 navigate('/login', { replace: true });
             }
         };
@@ -42,6 +37,7 @@ const AddContest = () => {
                 setProblems(response.data);
             } catch (err) {
                 console.error('Error fetching problems:', err);
+                toast.error('Failed to fetch problems. Please try again.');
             }
         };
 
@@ -51,35 +47,14 @@ const AddContest = () => {
 
     const handleProblemChange = (e) => {
         const { value, checked } = e.target;
-        if (checked) {
-            setSelectedProblems([...selectedProblems, value]);
-        } else {
-            setSelectedProblems(selectedProblems.filter(id => id !== value));
-        }
+        setSelectedProblems((prev) =>
+            checked ? [...prev, value] : prev.filter((id) => id !== value)
+        );
     };
-    
-    console.log("Selected problems array:", selectedProblems);
-    
 
     const handleValidation = () => {
-        if (!name) {
-            toast.error("Contest name is required!");
-            return false;
-        }
-        if (!description) {
-            toast.error("Contest description is required!");
-            return false;
-        }
-        if (!difficulty) {
-            toast.error("Contest difficulty is required!");
-            return false;
-        }
-        if (!startTime) {
-            toast.error("Start time is required!");
-            return false;
-        }
-        if (!endTime) {
-            toast.error("End time is required!");
+        if (!name || !description || !difficulty || !startTime || !endTime) {
+            toast.error("All fields are required!");
             return false;
         }
         if (new Date(startTime) >= new Date(endTime)) {
@@ -91,35 +66,27 @@ const AddContest = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-    
         if (!handleValidation()) return;
-    
         if (selectedProblems.length === 0) {
             setError('At least one problem must be selected.');
             toast.error('At least one problem must be selected.');
             return;
         }
-    
+
         try {
-            // Step 1: Create the contest
-            const createdContest = await axiosInstance.post('admin/contest/create', {
+            const { data: contest } = await axiosInstance.post('admin/contest/create', {
                 name,
                 description,
                 difficulty,
                 startTime,
                 endTime,
             });
-    
-            console.log("Created contest data:", createdContest);
-    
-            // Step 2: Link problems to the contest
-            const linkResponse = await axiosInstance.post('admin/contest/link', {
-                contestId: createdContest.data._id, // Use the correct contest ID from the response
+
+            await axiosInstance.post('admin/contest/link', {
+                contestId: contest._id,
                 problemIds: selectedProblems,
             });
-    
-            console.log("Linked problems response:", linkResponse);
-    
+
             toast.success('Contest created and problems linked successfully!');
             setName('');
             setDescription('');
@@ -135,18 +102,6 @@ const AddContest = () => {
             toast.error(errorMessage);
         }
     };
-    
-
-
-
-    const header = (
-        <div className="table-header flex justify-between items-center">
-            <span>List of Sheets</span>
-            <Button onClick={() => navigate('/admin/create-contest')} gradientDuoTone="cyanToBlue">
-                Add Contest
-            </Button>
-        </div>
-    );
 
     return (
         <div className="flex justify-center items-start mt-10 px-5">
@@ -160,7 +115,6 @@ const AddContest = () => {
                         type="text"
                         placeholder="Enter contest name"
                         value={name}
-                        header={header}
                         onChange={(e) => setName(e.target.value)}
                         required
                         className="mt-2"
@@ -248,17 +202,13 @@ const AddContest = () => {
                         <div className="text-gray-500 text-center">No problems available.</div>
                     )}
                 </div>
-                <br></br>
                 <HR />
                 <div className="flex justify-center">
                     <Button type="submit" gradientDuoTone="cyanToBlue" className="px-10">
                         Submit
                     </Button>
-                    <br></br>
                 </div>
-                <br></br>
             </form>
-            <br></br>
         </div>
     );
 };

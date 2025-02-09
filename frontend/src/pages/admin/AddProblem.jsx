@@ -205,7 +205,7 @@ const AddProblem = () => {
                 value={currentInput}
                 onChange={(e) => setCurrentInput(e.target.value)}
                 className="mt-2"
-                rows={4} // Adjust rows as per your UI preference
+                rows={4}
               />
             </div>
             <div className="mt-4">
@@ -216,7 +216,7 @@ const AddProblem = () => {
                 value={currentOutput}
                 onChange={(e) => setCurrentOutput(e.target.value)}
                 className="mt-2"
-                rows={4} // Adjust rows as per your UI preference
+                rows={4}
               />
             </div>
           </Modal.Body>

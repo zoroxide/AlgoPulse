@@ -15,10 +15,11 @@ import AddContest from "./pages/admin/AddContest";
 import ProblemSet from "./pages/problemset/ProblemSet";
 import Sheets from "./pages/sheets/Sheets";
 import Contests from "./pages/contests/Contests";
-import "primereact/resources/themes/lara-light-indigo/theme.css"; // Theme
-import "primereact/resources/primereact.min.css"; // PrimeReact core styles
-import "primeicons/primeicons.css"; // Icons
-import "react-quill/dist/quill.snow.css"; // React Quill
+import "primereact/resources/themes/lara-light-indigo/theme.css";
+import "primereact/resources/primereact.min.css";
+import "primeicons/primeicons.css";
+import "react-quill/dist/quill.snow.css";
+import ContestPage from "./pages/contests/ContestPage";
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/sheets/:sheetId" element={<SheetPage />} />
+            <Route path="/contest/:contestId" element={<ContestPage />} />
             <Route path="/editor" element={<Workspace />} />
             <Route path="/explore" element={<Explore />} />
             <Route path="/problems" element={<ProblemSet />} />

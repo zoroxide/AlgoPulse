@@ -23,5 +23,6 @@ router.get('/problems/:id', problemController.getProblemById);
 // ==================== "Contests" Public Operations =================
 router.get('/contests', contestController.getAllContests);
 router.get('/contests/:id', contestController.getContestById);
+router.get('/contests/:id/problems', contestController.getContestProblems);
 
 module.exports = router;

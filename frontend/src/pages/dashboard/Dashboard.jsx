@@ -4,6 +4,7 @@ import { AuthContext } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../utils/axiosInstance';
 import MonacoEditor from '@monaco-editor/react';
+import { Chart } from 'primereact/chart';
 
 const Dashboard = () => {
   const { user } = useContext(AuthContext);
@@ -14,6 +15,8 @@ const Dashboard = () => {
   const [codeforcesHandle, setCodeforcesHandle] = useState(user?.cf_handle || '');
   const [submissions, setSubmissions] = useState([]);
   const [selectedSubmission, setSelectedSubmission] = useState(null);
+  const [solvedProblems, setSolvedProblems] = useState({ easy: 0, medium: 0, hard: 0 });
+  const [totalSolvedProblems, setTotalSolvedProblems] = useState(0);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -27,12 +30,29 @@ const Dashboard = () => {
       }
     };
 
+    const fetchSolvedProblems = async (userId) => {
+      try {
+        const response = await axiosInstance.get(`/users/${userId}/solved-problems`);
+        const solved = { easy: 0, medium: 0, hard: 0 };
+        response.data.forEach(problem => {
+          if (problem.difficulty === 'Easy') solved.easy += 1;
+          if (problem.difficulty === 'Medium') solved.medium += 1;
+          if (problem.difficulty === 'Hard') solved.hard += 1;
+        });
+        setSolvedProblems(solved);
+        setTotalSolvedProblems(response.data.length);
+      } catch (error) {
+        console.error('Error fetching solved problems:', error);
+      }
+    };
+
     if (user) {
       setName(user.name);
       setImageLink(user.avatar);
       setPhone(user.phone);
       setCodeforcesHandle(user.cf_handle);
       fetchUserSubmissions(user._id);
+      fetchSolvedProblems(user._id);
     }
   }, [user]);
 
@@ -64,6 +84,30 @@ const Dashboard = () => {
     return 'Expert';
   };
 
+  const pieChartData = {
+    labels: ['Easy', 'Medium', 'Hard'],
+    datasets: [
+      {
+        data: [solvedProblems.easy, solvedProblems.medium, solvedProblems.hard],
+        backgroundColor: ['#42A5F5', '#66BB6A', '#FFA726'],
+        hoverBackgroundColor: ['#64B5F6', '#81C784', '#FFB74D']
+      }
+    ]
+  };
+
+  const pieChartOptions = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+      title: {
+        display: true,
+        text: 'Solved Problems by Difficulty'
+      }
+    }
+  };
+
   return (
     <div className="container mx-auto p-4">
       <Card>
@@ -82,18 +126,29 @@ const Dashboard = () => {
             <Badge color="info">{getBadge(user.score)}</Badge>
           </div>
         </div>
-        <div className="mt-4">
+        <Button className="mt-4" onClick={handleEditProfile}>
+          Edit Profile
+        </Button>
+      </Card>
+
+      <Card className="mt-4">
+        <h2 className="text-xl font-bold mb-4">Statistics</h2>
+        <div className="mb-4">
           <Label htmlFor="solved_problems" value="Solved Problems" />
           <TextInput
             id="solved_problems"
             type="text"
-            value={user.solved_problems ? user.solved_problems.length : 0}
+            value={totalSolvedProblems}
             readOnly={true}
           />
         </div>
-        <Button className="mt-4" onClick={handleEditProfile}>
-          Edit Profile
-        </Button>
+        <div className="mb-4 text-right">
+          <p>Score: {user.score}</p>
+          <Badge color="info">{getBadge(user.score)}</Badge>
+        </div>
+        <div style={{ width: '300px', height: '300px', margin: '0 auto' }}>
+          <Chart type="pie" data={pieChartData} options={pieChartOptions} />
+        </div>
       </Card>
 
       <Card className="mt-4">

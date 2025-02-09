@@ -11,10 +11,12 @@ router.get('/get-user', authenticate, userController.getUser);
 // ==================== "Users" Public Operations ====================
 router.get('/users', userController.getAllUsers);
 router.get('/users/:id', userController.getUserById);
+router.get('/users/:userId/solved-problems', userController.getSolvedProblems);
 
 // ==================== "Sheets" Public Operations ===================
 router.get('/sheets', sheetController.getAllSheets);
 router.get('/sheets/:id', sheetController.getSheetById);
+router.get('/sheets/:id/problems', sheetController.getSheetProblems);
 
 // ==================== "Problems" Public Operations =================
 router.get('/problems', problemController.getAllProblems);

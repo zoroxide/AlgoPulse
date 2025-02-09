@@ -26,4 +26,17 @@ module.exports = {
         .json({ message: "Error fetching sheet", error: err.message });
     }
   },
+
+  getSheetProblems: async (req, res) => {
+    const { id } = req.params;
+    try {
+      const sheet = await Sheet.findById(id).populate("problems");
+      if (!sheet) {
+        return res.status(404).json({ message: "Sheet not found" });
+      }
+      res.json(sheet.problems);
+    } catch (err) {
+      res.status(500).json({ message: "Error fetching sheet problems", error: err.message });
+    }
+  },
 };

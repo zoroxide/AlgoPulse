@@ -13,6 +13,7 @@ const SheetPage = () => {
     const navigate = useNavigate();
 
     const [sheet, setSheet] = useState(null);
+    const [problems, setProblems] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [submissions, setSubmissions] = useState([]);
@@ -25,13 +26,23 @@ const SheetPage = () => {
         const fetchSheet = async () => {
             try {
                 setIsLoading(true);
-                const response = await axiosInstance.get(`sheets/${sheetId}`);
+                const response = await axiosInstance.get(`/sheets/${sheetId}`);
                 setSheet(response.data);
             } catch (err) {
                 setError('Failed to load the sheet. Please try again later.');
                 console.error('Error fetching sheet:', err);
             } finally {
                 setIsLoading(false);
+            }
+        };
+
+        const fetchSheetProblems = async () => {
+            try {
+                const response = await axiosInstance.get(`/sheets/${sheetId}/problems`);
+                setProblems(response.data);
+            } catch (err) {
+                setError('Failed to load the sheet problems. Please try again later.');
+                console.error('Error fetching sheet problems:', err);
             }
         };
 
@@ -46,6 +57,7 @@ const SheetPage = () => {
 
         if (sheetId && user) {
             fetchSheet();
+            fetchSheetProblems();
             fetchUserSubmissions();
         }
     }, [sheetId, user]);
@@ -121,7 +133,7 @@ const SheetPage = () => {
 
             <div className="problems-table-container p-6">
                 <DataTable
-                    value={sheet.problems}
+                    value={problems}
                     paginator
                     rows={10}
                     dataKey="_id"

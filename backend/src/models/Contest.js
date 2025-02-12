@@ -7,6 +7,7 @@ const contestSchema = new mongoose.Schema({
   startTime: { type: Date, required: true },
   endTime: { type: Date, required: true },
   problems: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Problem' }],
+  createdAt: { type: Date, default: Date.now },
 });
 
 module.exports = mongoose.model('Contest', contestSchema);

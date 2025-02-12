@@ -10,7 +10,8 @@ const userSchema = new mongoose.Schema({
   score: { type: Number, default: 0 },
   isAdmin: { type: Boolean, default: false },
   avatar: { type: String },
-  solved_problems: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Problem' }]
+  solved_problems: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Problem' }],
+  createdAt: { type: Date, default: Date.now },
 });
 
 module.exports = mongoose.model('User', userSchema);

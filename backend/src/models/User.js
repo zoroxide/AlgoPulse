@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema({
   phone: String,
   score: { type: Number, default: 0 },
   isAdmin: { type: Boolean, default: false },
-  avatar: { type: String },
+  avatar: { type: String, required: true },
   solved_problems: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Problem' }],
   createdAt: { type: Date, default: Date.now },
 });

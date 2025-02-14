@@ -5,9 +5,9 @@ const Problem = require('../../models/Problem');
 
 module.exports = {
     createFight: async (req, res) => {
-        const { name, userId, startTime, endTime } = req.body;
+        const { name, userId, startTime, endTime, number_of_problms } = req.body;
         try {
-            const problem = await Problem.aggregate([{ $sample: { size: 1 } }]);
+            const problem = await Problem.aggregate([{ $sample: { size: number_of_problms } }]);
             if (!problem || problem.length === 0) {
                 return res.status(404).json({ message: 'No problems available' });
             }

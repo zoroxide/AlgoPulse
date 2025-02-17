@@ -1,4 +1,5 @@
 const Contest = require("../../models/Contest");
+const Submission = require("../../models/Submission");
 
 module.exports = {
   getAllContests: async (req, res) => {
@@ -33,6 +34,26 @@ module.exports = {
       res.json(contest.problems);
     } catch (err) {
       res.status(500).json({ message: "Error fetching contest problems", error: err.message });
+    }
+  },
+
+  getContestLeaderboard: async (req, res) => {
+    const { id } = req.params;
+    try {
+      const submissions = await Submission.find({ contest: id, accepted: true }).populate("user");
+      const leaderboard = submissions.reduce((acc, submission) => {
+        const userId = submission.user._id.toString();
+        if (!acc[userId]) {
+          acc[userId] = { user: submission.user, problemsSolved: 0 };
+        }
+        acc[userId].problemsSolved += 1;
+        return acc;
+      }, {});
+
+      const sortedLeaderboard = Object.values(leaderboard).sort((a, b) => b.problemsSolved - a.problemsSolved);
+      res.json(sortedLeaderboard);
+    } catch (err) {
+      res.status(500).json({ message: "Error fetching leaderboard", error: err.message });
     }
   },
 };

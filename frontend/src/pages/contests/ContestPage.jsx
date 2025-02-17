@@ -2,10 +2,11 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
-import { Spinner, Alert, Button, Modal, Table } from 'flowbite-react';
+import { Spinner, Alert, Button, Modal, Table, Tabs } from 'flowbite-react';
+import { HiClipboardList } from "react-icons/hi";
+import { MdDashboard } from "react-icons/md";
 import axiosInstance from '../../utils/axiosInstance';
 import { AuthContext } from '../../context/AuthContext';
-import MonacoEditor from '@monaco-editor/react';
 
 const ContestPage = () => {
     const { user } = useContext(AuthContext);
@@ -14,6 +15,7 @@ const ContestPage = () => {
 
     const [contest, setContest] = useState(null);
     const [problems, setProblems] = useState([]);
+    const [leaderboard, setLeaderboard] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [submissions, setSubmissions] = useState([]);
@@ -46,6 +48,16 @@ const ContestPage = () => {
             }
         };
 
+        const fetchLeaderboard = async () => {
+            try {
+                const response = await axiosInstance.get(`/contests/${contestId}/leaderboard`);
+                setLeaderboard(response.data);
+            } catch (err) {
+                setError('Failed to load the leaderboard. Please try again later.');
+                console.error('Error fetching leaderboard:', err);
+            }
+        };
+
         const fetchUserSubmissions = async () => {
             try {
                 const response = await axiosInstance.get(`/submissions/user/${user._id}`);
@@ -58,6 +70,7 @@ const ContestPage = () => {
         if (contestId && user) {
             fetchContest();
             fetchContestProblems();
+            fetchLeaderboard();
             fetchUserSubmissions();
         }
     }, [contestId, user]);
@@ -89,7 +102,7 @@ const ContestPage = () => {
     };
 
     const handleRowClick = (rowData) => {
-        navigate(`/problem/${rowData._id}`);
+        navigate(`/problem/${rowData._id}?isContest=true`);
     };
 
     const handleShowSubmissions = async (problemId) => {
@@ -124,61 +137,77 @@ const ContestPage = () => {
         return <Alert color="failure">Contest not found.</Alert>;
     }
 
-    const currentTime = new Date();
-    const startTime = new Date(contest.startTime);
-    const endTime = new Date(contest.endTime);
-
-    if (currentTime < startTime || currentTime > endTime) {
-        return <Alert color="failure">This contest is not currently available.</Alert>;
-    }
-
     return (
         <div className="container mx-auto p-6">
             <h1 className="text-3xl font-semibold mb-4">{contest.name}</h1>
             <p className="text-lg mb-6">{contest.description}</p>
 
-            <h2 className="text-xl font-semibold mt-6 mb-4">Problems</h2>
-
-            <div className="problems-table-container p-6">
-                <DataTable
-                    value={problems}
-                    paginator
-                    rows={10}
-                    dataKey="_id"
-                    loading={isLoading}
-                    globalFilterFields={['name', 'difficulty']}
-                    emptyMessage="No problems found."
-                    onRowClick={(e) => handleRowClick(e.data)}
-                    className="p-datatable-custom"
-                >
-                    <Column field="name" header="Problem" filter filterPlaceholder="Search by name" style={{ minWidth: '12rem' }} />
-                    <Column
-                        field="difficulty"
-                        header="Difficulty"
-                        body={difficultyBodyTemplate}
-                        filter
-                        filterPlaceholder="Search by difficulty"
-                        style={{ minWidth: '12rem' }}
-                    />
-                    <Column
-                        field="submissionStatus"
-                        header="Submission Status"
-                        body={submissionStatusTemplate}
-                        style={{ minWidth: '12rem' }}
-                    />
-                    {user && user.isAdmin && (
-                        <Column
-                            header="Actions"
-                            body={(rowData) => (
-                                <Button onClick={() => handleShowSubmissions(rowData._id)}>
-                                    Show Submissions
-                                </Button>
+            <Tabs aria-label="Tabs with underline" variant="underline">
+                <Tabs.Item active title="Problems" icon={HiClipboardList}>
+                    <h2 className="text-xl font-semibold mt-6 mb-4">Problems</h2>
+                    <div className="problems-table-container p-6">
+                        <DataTable
+                            value={problems}
+                            paginator
+                            rows={10}
+                            dataKey="_id"
+                            loading={isLoading}
+                            globalFilterFields={['name', 'difficulty']}
+                            emptyMessage="No problems found."
+                            onRowClick={(e) => handleRowClick(e.data)}
+                            className="p-datatable-custom"
+                        >
+                            <Column field="name" header="Problem" filter filterPlaceholder="Search by name" style={{ minWidth: '12rem' }} />
+                            <Column
+                                field="difficulty"
+                                header="Difficulty"
+                                body={difficultyBodyTemplate}
+                                filter
+                                filterPlaceholder="Search by difficulty"
+                                style={{ minWidth: '12rem' }}
+                            />
+                            <Column
+                                field="submissionStatus"
+                                header="Submission Status"
+                                body={submissionStatusTemplate}
+                                style={{ minWidth: '12rem' }}
+                            />
+                            {user && user.isAdmin && (
+                                <Column
+                                    header="Actions"
+                                    body={(rowData) => (
+                                        <Button onClick={() => handleShowSubmissions(rowData._id)}>
+                                            Show Submissions
+                                        </Button>
+                                    )}
+                                    style={{ minWidth: '12rem' }}
+                                />
                             )}
-                            style={{ minWidth: '12rem' }}
-                        />
-                    )}
-                </DataTable>
-            </div>
+                        </DataTable>
+                    </div>
+                </Tabs.Item>
+                <Tabs.Item title="Leaderboard" icon={MdDashboard}>
+                    <h2 className="text-xl font-semibold mt-6 mb-4">Leaderboard</h2>
+                    <div className="leaderboard-table-container p-6">
+                        <Table>
+                            <Table.Head>
+                                <Table.HeadCell>Rank</Table.HeadCell>
+                                <Table.HeadCell>User</Table.HeadCell>
+                                <Table.HeadCell>Problems Solved</Table.HeadCell>
+                            </Table.Head>
+                            <Table.Body>
+                                {leaderboard.map((entry, index) => (
+                                    <Table.Row key={entry.user._id}>
+                                        <Table.Cell>{index + 1}</Table.Cell>
+                                        <Table.Cell>{entry.user.username}</Table.Cell>
+                                        <Table.Cell>{entry.problemsSolved}</Table.Cell>
+                                    </Table.Row>
+                                ))}
+                            </Table.Body>
+                        </Table>
+                    </div>
+                </Tabs.Item>
+            </Tabs>
 
             <Modal show={isModalOpen} onClose={() => setIsModalOpen(false)}>
                 <Modal.Header>Submissions for Problem</Modal.Header>
@@ -217,7 +246,6 @@ const ContestPage = () => {
                     {selectedSubmission && (
                         <div>
                             <p><strong>User:</strong> {selectedSubmission.user.username}</p>
-                            <p><strong>Problem:</strong> {selectedSubmission.problem.name}</p>
                             <p><strong>Time:</strong> {new Date(selectedSubmission.time).toLocaleString()}</p>
                             <p><strong>Status:</strong> {selectedSubmission.accepted ? 'Accepted' : 'Rejected'}</p>
                             <p><strong>Code:</strong></p>

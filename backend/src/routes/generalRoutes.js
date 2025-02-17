@@ -26,5 +26,6 @@ router.get('/problems/:id', problemController.getProblemById);
 router.get('/contests', contestController.getAllContests);
 router.get('/contests/:id', contestController.getContestById);
 router.get('/contests/:id/problems', contestController.getContestProblems);
+router.get('/contests/:id/leaderboard', contestController.getContestLeaderboard);
 
 module.exports = router;

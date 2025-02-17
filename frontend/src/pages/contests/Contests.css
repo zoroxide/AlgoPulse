@@ -7,14 +7,14 @@
 .sheets-section {
     flex: 2;
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /*2 columns per row*/
+    grid-template-columns: repeat(2, 1fr);
     gap: 20px;
 }
 
 .sheets-title {
-    font-size: 24px; /* Adjust the size as needed */
-    font-weight: bold; /* Make it bold */
-    margin-bottom: 20px; /* Space below the title */
-    color: #333; /* Color of the title */
+    font-size: 24px;
+    font-weight: bold; 
+    margin-bottom: 20px;
+    color: #333;
 }
 

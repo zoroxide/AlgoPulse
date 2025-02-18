@@ -1,25 +1,23 @@
 .explore-container {
     display: flex;
-    gap: 20px;
-    padding: 20px;
-}
-
-.sheets-section {
+    justify-content: space-between;
+  }
+  
+  .left-section {
     flex: 2;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr); /* Two columns per row */
-    gap: 20px;
-}
-
-.scoreboard-section {
+    margin-right: 20px;
+  }
+  
+  .right-section {
     flex: 1;
-    min-width: 250px; /* Optional: Set a minimum width for the scoreboard */
-}
-
-.sheets-title {
-    font-size: 24px; /* Adjust the size as needed */
-    font-weight: bold; /* Make it bold */
-    margin-bottom: 20px; /* Space below the title */
-    color: #333; /* Color of the title */
-}
-
+  }
+  
+  .sheets-section, .contests-section {
+    margin-bottom: 20px;
+  }
+  
+  .sheets-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }

@@ -19,6 +19,7 @@ router.get('/sheets/:id', sheetController.getSheetById);
 router.get('/sheets/:id/problems', sheetController.getSheetProblems);
 
 // ==================== "Problems" Public Operations =================
+router.get('/problems/stats', problemController.getProblemStats);
 router.get('/problems', problemController.getAllProblems);
 router.get('/problems/:id', problemController.getProblemById);
 
@@ -26,6 +27,7 @@ router.get('/problems/:id', problemController.getProblemById);
 router.get('/contests', contestController.getAllContests);
 router.get('/contests/:id', contestController.getContestById);
 router.get('/contests/:id/problems', contestController.getContestProblems);
-router.get('/contests/:id/leaderboard', contestController.getContestLeaderboard);
+router.get('/contests/:contestId/problems/:problemId', contestController.getProblemFromContest);
+router.get('/contests/leaderboard/:id', contestController.getContestLeaderboard);
 
 module.exports = router;

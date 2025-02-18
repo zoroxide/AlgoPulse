@@ -1,7 +1,23 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Chart } from 'primereact/chart';
+import axiosInstance from '../../utils/axiosInstance';
 
 const AdminDashboard = () => {
+    const [problemStats, setProblemStats] = useState({ easy: 0, medium: 0, hard: 0 });
+
+    useEffect(() => {
+        const fetchProblemStats = async () => {
+            try {
+                const response = await axiosInstance.get('/problems/stats');
+                setProblemStats(response.data);
+            } catch (error) {
+                console.error('Error fetching problem statistics:', error);
+            }
+        };
+
+        fetchProblemStats();
+    }, []);
+
     const lineChartData = {
         labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
         datasets: [
@@ -39,7 +55,7 @@ const AdminDashboard = () => {
         labels: ['Easy', 'Medium', 'Hard'],
         datasets: [
             {
-                data: [300, 50, 100], // Example data
+                data: [problemStats.easy, problemStats.medium, problemStats.hard],
                 backgroundColor: ['#42A5F5', '#66BB6A', '#FFA726'],
                 hoverBackgroundColor: ['#64B5F6', '#81C784', '#FFB74D']
             }
@@ -62,9 +78,6 @@ const AdminDashboard = () => {
     return (
         <div className="p-4">
             <h1 className="text-2xl font-bold mb-4">Admin Dashboard</h1>
-            {/* <div className="card" style={{ width: '200px', height: '200px' }}>
-                <Chart type="pie" data={pieChartData} options={pieChartOptions} />
-            </div> */}
             <div className="card mb-4">
                 <Chart type="line" data={lineChartData} options={lineChartOptions} />
             </div>

@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const contestSchema = new mongoose.Schema({
   name: { type: String, required: true },
+  difficulty: { type: String, required: true },
   // div: { type: Number, required: true },
   description: { type: String, required: true },
   startTime: { type: Date, required: true },

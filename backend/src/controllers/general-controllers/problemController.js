@@ -10,6 +10,18 @@ module.exports = {
     }
   },
 
+  getProblemStats: async (req, res) => {
+    try {
+      const easyCount = await Problem.countDocuments({ difficulty: 'Easy' });
+      const mediumCount = await Problem.countDocuments({ difficulty: 'Medium' });
+      const hardCount = await Problem.countDocuments({ difficulty: 'Hard' });
+
+      res.json({ easy: easyCount, medium: mediumCount, hard: hardCount });
+    } catch (err) {
+      res.status(500).json({ message: 'Error fetching problem statistics', error: err.message });
+    }
+  },
+
   getProblemById: async (req, res) => {
     const { id } = req.params;
     try {

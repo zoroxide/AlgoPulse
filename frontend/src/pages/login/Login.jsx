@@ -20,7 +20,7 @@ const Login = () => {
     try {
       const response = await axiosInstance.post('/user/login', { email, password });
       login(response.data.token);
-      navigate('/explore');
+      navigate('/');
     } catch (err) {
       setError('Invalid email or password');
       // console.error('Error logging in:', err);

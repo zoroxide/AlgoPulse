@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import CodeEditor from "../../components/workspace/code-editor/CodeEditor";
+import SetEditor from "../../components/workspace/SetEditor";
 import axiosInstance from "../../utils/axiosInstance";
 
-const Workspace = () => {
+const ProblemSetWorkspace = () => {
   const { problemId } = useParams();
   const [problem, setProblem] = useState(null);
   const [leftWidth, setLeftWidth] = useState(50);
@@ -64,10 +64,10 @@ const Workspace = () => {
 
       {/* Code Editor Section */}
       <div className="flex flex-col" style={{ width: `${100 - leftWidth}%` }}>
-        <CodeEditor problem={problem} />
+        <SetEditor problem={problem} />
       </div>
     </div>
   );
 };
 
-export default Workspace;
+export default ProblemSetWorkspace;

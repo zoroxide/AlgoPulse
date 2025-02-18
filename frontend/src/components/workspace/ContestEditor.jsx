@@ -4,13 +4,13 @@ import { FaPlay, FaMoon, FaSun } from "react-icons/fa";
 import MonacoEditor from "@monaco-editor/react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import templates from "../../../templates.json";
+import templates from "../../templates.json";
 import axios from "axios";
-import axiosInstance from "../../../utils/axiosInstance";
+import axiosInstance from "../../utils/axiosInstance";
 import { Modal } from "flowbite-react";
-import { AuthContext } from '../../../context/AuthContext';
+import { AuthContext } from '../../context/AuthContext';
 
-const CodeEditor = ({ problem }) => {
+const ContestEditor = ({ problem }) => {
   const { user } = useContext(AuthContext);
   const [language, setLanguage] = useState("cpp");
   const [theme, setTheme] = useState("vs-dark");
@@ -208,4 +208,4 @@ const CodeEditor = ({ problem }) => {
   );
 };
 
-export default CodeEditor;
+export default ContestEditor;

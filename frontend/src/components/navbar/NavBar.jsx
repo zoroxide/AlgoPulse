@@ -18,7 +18,7 @@ const Nav = () => {
 
   return (
     <Navbar fluid rounded>
-      <Navbar.Brand onClick={() => navigate('/explore')}>
+      <Navbar.Brand onClick={() => navigate('/')}>
         <img
           src="https://flowbite-react.com/favicon.svg"
           className="mr-3 h-6 sm:h-9"

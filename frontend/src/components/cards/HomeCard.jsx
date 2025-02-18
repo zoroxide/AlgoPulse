@@ -15,7 +15,11 @@ export default function HomeCard({ title, content, link, contestId, isUpcoming, 
         const response = await axiosInstance.get(`/contests/${contestId}`);
         setContest(response.data);
       } catch (err) {
-        setError('Failed to load the contest. Please try again later.');
+        if (err.response && err.response.status === 404) {
+          setError('Contest not found. Please check the contest ID.');
+        } else {
+          setError('Failed to load the contest. Please try again later.');
+        }
         console.error('Error fetching contest:', err);
       } finally {
         setIsLoading(false);

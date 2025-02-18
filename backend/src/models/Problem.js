@@ -8,7 +8,6 @@ const testcaseSchema = new mongoose.Schema({
 
 const problemSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  isPrivate: { type: Boolean, required: true },
   description: { type: String, required: true },
   difficulty: { type: String, required: true },
   testcases: { type: [testcaseSchema], required: true },

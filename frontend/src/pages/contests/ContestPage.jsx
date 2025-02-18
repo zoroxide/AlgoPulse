@@ -23,6 +23,7 @@ const ContestPage = () => {
     const [selectedSubmission, setSelectedSubmission] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isSubmissionModalOpen, setIsSubmissionModalOpen] = useState(false);
+    const [timeLeft, setTimeLeft] = useState('');
 
     useEffect(() => {
         const fetchContest = async () => {
@@ -31,7 +32,7 @@ const ContestPage = () => {
                 const response = await axiosInstance.get(`/contests/${contestId}`);
                 setContest(response.data);
             } catch (err) {
-                setError('Failed to load the contest. Please try again later.');
+                setError('Failed to load the contest. Please try again later, contest page');
                 console.error('Error fetching contest:', err);
             } finally {
                 setIsLoading(false);
@@ -50,7 +51,7 @@ const ContestPage = () => {
 
         const fetchLeaderboard = async () => {
             try {
-                const response = await axiosInstance.get(`/contests/${contestId}/leaderboard`);
+                const response = await axiosInstance.get(`/contests/leaderboard/${contestId}`);
                 setLeaderboard(response.data);
             } catch (err) {
                 setError('Failed to load the leaderboard. Please try again later.');
@@ -74,6 +75,37 @@ const ContestPage = () => {
             fetchUserSubmissions();
         }
     }, [contestId, user]);
+
+    useEffect(() => {
+        if (contest) {
+            const interval = setInterval(() => {
+                const currentTime = new Date();
+                const startTime = new Date(contest.startTime);
+                const endTime = new Date(contest.endTime);
+                let timeDiff;
+
+                if (currentTime < startTime) {
+                    timeDiff = startTime - currentTime;
+                } else if (currentTime < endTime) {
+                    timeDiff = endTime - currentTime;
+                } else {
+                    timeDiff = 0;
+                }
+
+                const hours = Math.floor(timeDiff / (1000 * 60 * 60));
+                const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+
+                setTimeLeft(`${hours}h ${minutes}m ${seconds}s`);
+
+                if (timeDiff <= 0) {
+                    clearInterval(interval);
+                }
+            }, 1000);
+
+            return () => clearInterval(interval);
+        }
+    }, [contest]);
 
     const difficultyBodyTemplate = (rowData) => {
         const difficultyColors = {
@@ -102,7 +134,7 @@ const ContestPage = () => {
     };
 
     const handleRowClick = (rowData) => {
-        navigate(`/problem/${rowData._id}?isContest=true`);
+        navigate(`/problem/${rowData._id}`);
     };
 
     const handleShowSubmissions = async (problemId) => {
@@ -139,8 +171,7 @@ const ContestPage = () => {
 
     return (
         <div className="container mx-auto p-6">
-            <h1 className="text-3xl font-semibold mb-4">{contest.name}</h1>
-            <p className="text-lg mb-6">{contest.description}</p>
+            <p className="text-lg mb-6">Time left: {timeLeft}</p>
 
             <Tabs aria-label="Tabs with underline" variant="underline">
                 <Tabs.Item active title="Problems" icon={HiClipboardList}>

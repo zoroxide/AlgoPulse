@@ -85,7 +85,7 @@ const SheetPage = () => {
                 <span className="text-red-600">Rejected ✘</span>
             );
         }
-        return null;
+        return <span className="text-gray-600">No submissions made</span>;
     };
 
     const handleRowClick = (rowData) => {

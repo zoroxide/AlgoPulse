@@ -96,7 +96,7 @@ const UserTable = () => {
         <Column field="phone" header="Phone" filter filterPlaceholder="Search by phone" style={{ minWidth: '12rem' }} />
         <Column field="email" header="Email" filter filterPlaceholder="Search by email" style={{ minWidth: '12rem' }} />
         <Column field="username" header="Username" filter filterPlaceholder="Search by username" style={{ minWidth: '12rem' }} />
-        <Column field="codeforcesHandle" header="Codeforces Handle" filter filterPlaceholder="Search by handle" style={{ minWidth: '12rem' }} />
+        <Column field="cf_handle" header="Codeforces Handle" filter filterPlaceholder="Search by handle" style={{ minWidth: '12rem' }} />
         <Column header="Options" body={optionsBodyTemplate} style={{ minWidth: '10rem' }} />
       </DataTable>
     </div>

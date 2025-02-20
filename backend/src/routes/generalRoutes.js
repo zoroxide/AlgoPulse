@@ -9,25 +9,25 @@ const contestController = require('../controllers/general-controllers/contestCon
 router.get('/get-user', authenticate, userController.getUser);
 
 // ==================== "Users" Public Operations ====================
-router.get('/users', userController.getAllUsers);
-router.get('/users/:id', userController.getUserById);
-router.get('/users/:userId/solved-problems', userController.getSolvedProblems);
+router.get('/users', authenticate,userController.getAllUsers);
+router.get('/users/:id', authenticate,userController.getUserById);
+router.get('/users/:userId/solved-problems',authenticate, userController.getSolvedProblems);
 
 // ==================== "Sheets" Public Operations ===================
-router.get('/sheets', sheetController.getAllSheets);
-router.get('/sheets/:id', sheetController.getSheetById);
-router.get('/sheets/:id/problems', sheetController.getSheetProblems);
+router.get('/sheets', authenticate,sheetController.getAllSheets);
+router.get('/sheets/:id', authenticate,sheetController.getSheetById);
+router.get('/sheets/:id/problems', authenticate,sheetController.getSheetProblems);
 
 // ==================== "Problems" Public Operations =================
-router.get('/problems/stats', problemController.getProblemStats);
-router.get('/problems', problemController.getAllProblems);
-router.get('/problems/:id', problemController.getProblemById);
+router.get('/problems/stats', authenticate,problemController.getProblemStats);
+router.get('/problems', authenticate,problemController.getAllProblems);
+router.get('/problems/:id', authenticate,problemController.getProblemById);
 
 // ==================== "Contests" Public Operations =================
-router.get('/contests', contestController.getAllContests);
-router.get('/contests/:id', contestController.getContestById);
-router.get('/contests/:id/problems', contestController.getContestProblems);
-router.get('/contests/:contestId/problems/:problemId', contestController.getProblemFromContest);
-router.get('/contests/leaderboard/:id', contestController.getContestLeaderboard);
+router.get('/contests', authenticate,contestController.getAllContests);
+router.get('/contests/:id', authenticate,contestController.getContestById);
+router.get('/contests/:id/problems', authenticate,contestController.getContestProblems);
+router.get('/contests/:contestId/problems/:problemId', authenticate,contestController.getProblemFromContest);
+router.get('/contests/leaderboard/:id', authenticate,contestController.getContestLeaderboard);
 
 module.exports = router;

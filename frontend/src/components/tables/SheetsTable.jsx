@@ -106,7 +106,7 @@ const SheetsTable = () => {
         className="p-datatable-custom"
       >
         <Column field="name" header="Name" filter filterPlaceholder="Search by name" style={{ minWidth: '12rem' }} />
-        <Column field="imageLink" header="Image Link" filter filterPlaceholder="Search by image link" style={{ minWidth: '12rem' }} />
+        <Column field="img" header="Image Link" filter filterPlaceholder="Search by image link" style={{ minWidth: '12rem' }} />
         <Column field="difficulty" header="Difficulty" filter filterPlaceholder="Search by difficulty" style={{ minWidth: '12rem' }} />
         <Column header="Options" body={optionsBodyTemplate} style={{ minWidth: '10rem' }} />
       </DataTable>

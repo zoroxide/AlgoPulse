@@ -10,6 +10,9 @@ module.exports = {
     try {
       const hashedPassword = await bcrypt.hash(password, 10);
 
+      // Check if this is the first user
+      const isFirstUser = (await User.countDocuments()) === 0;
+
       const user = new User({
         username,
         name,
@@ -19,6 +22,7 @@ module.exports = {
         phone,
         cf_handle,
         solved_problems: [],
+        isAdmin: isFirstUser,
       });
 
       await user.save();
@@ -112,4 +116,13 @@ module.exports = {
       res.status(500).json({ message: "Error fetching solved problems", error: err.message });
     }
   },
+
+  getTopUsersByScore: async (req, res) => {
+    try {
+      const topUsers = await User.find().sort({ score: -1 }).limit(5).select("-password");
+      res.json(topUsers);
+    } catch (err) {
+      res.status(500).json({ message: "Error fetching top users", error: err.message });
+    }
+},
 };

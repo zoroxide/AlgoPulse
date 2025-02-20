@@ -29,9 +29,9 @@ const Nav = () => {
         </span>
       </Navbar.Brand>
       <Navbar.Collapse>
-        <Navbar.Link href="/sheets">Sheets</Navbar.Link>
-        <Navbar.Link href="/contests">Contests</Navbar.Link>
-        <Navbar.Link href="/problems">Problem Sets</Navbar.Link>
+        <Navbar.Link onClick={() => navigate('/sheets')}>Sheets</Navbar.Link>
+        <Navbar.Link onClick={() => navigate('/contests')}>Contests</Navbar.Link>
+        <Navbar.Link onClick={() => navigate('/problems')}>Problem Sets</Navbar.Link>
       </Navbar.Collapse>
       <div>
         {user ? (

@@ -16,6 +16,7 @@ import Contests from "./pages/contests/Contests";
 import ContestPage from "./pages/contests/ContestPage";
 import ContestWorkspace from "./pages/workspace/ContestWorkspace";
 import ProblemSetWorkspace from "./pages/workspace/ProblemSetWorkspace";
+import ProtectedRoute from "./utils/ProtectedRoute";
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
@@ -28,21 +29,21 @@ function App() {
         <Nav />
         <div className="flex-grow">
           <Routes>
-            <Route path="/" element={<Explore />} />
+            <Route path="/" element={<ProtectedRoute><Explore /></ProtectedRoute>} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
-            <Route path="/sheets/:sheetId" element={<SheetPage />} />
-            <Route path="/contest/:contestId" element={<ContestPage />} />
-            <Route path="/problems" element={<ProblemSet />} />
-            <Route path="/sheets" element={<Sheets />} />
-            <Route path="/contests" element={<Contests />} />
-            <Route path="/admin" element={<Panel />} />
-            <Route path="/admin/create-sheet" element={<AddSheet />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/contest/:contestId/problem/:problemId" element={<ContestWorkspace />} />
-            <Route path="/admin/create-problem" element={<AddProblem />} />
-            <Route path="/admin/create-contest" element={<AddContest />} />
-            <Route path="/problem/:problemId" element={<ProblemSetWorkspace />} />
+            <Route path="/sheets/:sheetId" element={<ProtectedRoute><SheetPage /></ProtectedRoute>} />
+            <Route path="/contest/:contestId" element={<ProtectedRoute><ContestPage /></ProtectedRoute>} />
+            <Route path="/problems" element={<ProtectedRoute><ProblemSet /></ProtectedRoute>} />
+            <Route path="/sheets" element={<ProtectedRoute><Sheets /></ProtectedRoute>} />
+            <Route path="/contests" element={<ProtectedRoute><Contests /></ProtectedRoute>} />
+            <Route path="/admin" element={<ProtectedRoute adminOnly={true}><Panel /></ProtectedRoute>} />
+            <Route path="/admin/create-sheet" element={<ProtectedRoute adminOnly={true}><AddSheet /></ProtectedRoute>} />
+            <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+            <Route path="/contest/:contestId/problem/:problemId" element={<ProtectedRoute><ContestWorkspace /></ProtectedRoute>} />
+            <Route path="/admin/create-problem" element={<ProtectedRoute adminOnly={true}><AddProblem /></ProtectedRoute>} />
+            <Route path="/admin/create-contest" element={<ProtectedRoute adminOnly={true}><AddContest /></ProtectedRoute>} />
+            <Route path="/problem/:problemId" element={<ProtectedRoute><ProblemSetWorkspace /></ProtectedRoute>} />
           </Routes>
         </div>
       </Router>

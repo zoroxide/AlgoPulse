@@ -5,6 +5,7 @@ import { Button } from "flowbite-react";
 import { AuthContext } from '../../context/AuthContext';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import axiosInstance from '../../utils/axiosInstance';
 import './UserTable.css';
 
 const ModeratorsTable = () => {
@@ -14,20 +15,9 @@ const ModeratorsTable = () => {
   const { currentUser } = useContext(AuthContext); 
 
   useEffect(() => {
-    fetch('/api/users', {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      }
-    })
+    axiosInstance.get('/users')
       .then(response => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then(data => {
+        const data = response.data;
         if (Array.isArray(data)) {
           const admins = data.filter(user => user.isAdmin);
           setModerators(admins);
@@ -59,24 +49,10 @@ const ModeratorsTable = () => {
   };
 
   const handleEdit = (rowData) => {
-    fetch(`/api/user/make-admin/${rowData.id}`, {
-      method: 'PUT',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      }
-    })
+    axiosInstance.put(`/user/make-admin/${rowData._id}`)
       .then(response => {
-        if (!response.ok) {
-          toast.error("Error demoting user to normal user.");
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then(data => {
         toast.success("User demoted to normal user!");
-        console.log("User demoted to normal user: ", data);
-        // Update the moderators state if necessary
+        setModerators(prevModerators => prevModerators.filter(user => user._id !== rowData._id));
       })
       .catch(error => {
         toast.error("Error demoting user to normal user!");
@@ -85,24 +61,10 @@ const ModeratorsTable = () => {
   };
 
   const handleDelete = (rowData) => {
-    fetch(`/api/user/pan/${rowData.id}`, {
-      method: 'PUT',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      }
-    })
+    axiosInstance.put(`/user/pan/${rowData._id}`)
       .then(response => {
-        if (!response.ok) {
-          toast.error("Error panning user.");
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then(data => {
         toast.success("User panned successfully!");
-        console.log("User panned: ", data);
-        // Update the moderators state if necessary
+        setModerators(prevModerators => prevModerators.filter(user => user._id !== rowData._id));
       })
       .catch(error => {
         toast.error("Error panning user!");
@@ -123,10 +85,10 @@ const ModeratorsTable = () => {
         value={moderators} 
         paginator 
         rows={10} 
-        dataKey="id" 
+        dataKey="_id" 
         filters={filters} 
         loading={loading}
-        globalFilterFields={['name', 'phone', 'email', 'username', 'codeforcesHandle']} 
+        globalFilterFields={['name', 'phone', 'email', 'username', 'cf_handle']} 
         header={header} 
         emptyMessage="No moderators found."
         className="p-datatable-custom"
@@ -135,7 +97,7 @@ const ModeratorsTable = () => {
         <Column field="phone" header="Phone" filter filterPlaceholder="Search by phone" style={{ minWidth: '12rem' }} />
         <Column field="email" header="Email" filter filterPlaceholder="Search by email" style={{ minWidth: '12rem' }} />
         <Column field="username" header="Username" filter filterPlaceholder="Search by username" style={{ minWidth: '12rem' }} />
-        <Column field="codeforcesHandle" header="Codeforces Handle" filter filterPlaceholder="Search by handle" style={{ minWidth: '12rem' }} />
+        <Column field="cf_handle" header="Codeforces Handle" filter filterPlaceholder="Search by handle" style={{ minWidth: '12rem' }} />
         <Column header="Options" body={optionsBodyTemplate} style={{ minWidth: '10rem' }} />
       </DataTable>
     </div>

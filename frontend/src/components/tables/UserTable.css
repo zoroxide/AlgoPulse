@@ -11,7 +11,7 @@
 }
 
 .p-datatable-custom .p-datatable-header {
-  background-color: #333; /* Change to a neutral color */
+  background-color: #333; 
   color: #fff;
   font-size: 1.25rem;
   padding: 1rem;
@@ -20,7 +20,7 @@
 }
 
 .p-datatable-custom .p-datatable-thead > tr > th {
-  background-color: #333; /* Change to a neutral color */
+  background-color: #333; 
   color: #fff;
   text-align: left;
   padding: 0.75rem;

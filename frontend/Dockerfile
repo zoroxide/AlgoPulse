@@ -12,11 +12,14 @@ RUN npm install
 # Copy the rest of the application code
 COPY . .
 
-# Copy .env file
-COPY .env .env
+# Build the application
+RUN npm run build
+
+# Install serve to serve the build files
+RUN npm install -g serve
 
 # Expose the application port
-EXPOSE 5000
+EXPOSE 3000
 
 # Start the application
-CMD ["npm", "start"]
+CMD ["serve", "-s", "build"]

@@ -23,7 +23,7 @@ connectDB();
 app.use('/api', generalRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/admin', adminRoutes);
-app.use('/api/compiler', compilerRoutes);
+app.use('/api/compile', compilerRoutes);
 app.use('/api/submissions', submissionRoutes);
 app.use('/api/fights', fightRoutes); 
 

@@ -1,6 +1,7 @@
 # Client (front end)
 - Majors:
 - - [ ] why the system refreshes to the login ???
+- - [ ] update tables (contest table, sheet table, user dashboard submissions tabls)
 - - [ ] fix the current user appears in the moderators and users list in admin dashboard
 - - [ ] fix editing modals in Admin Dashboard
 - - [ ] test the Contest Workspace submission system (*)

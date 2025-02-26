@@ -134,7 +134,7 @@ const ContestPage = () => {
     };
 
     const handleRowClick = (rowData) => {
-        navigate(`/problem/${rowData._id}`);
+        navigate(`/contest/${contestId}/problem/${rowData._id}`);
     };
 
     const handleShowSubmissions = async (problemId) => {

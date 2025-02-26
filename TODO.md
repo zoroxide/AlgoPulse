@@ -1,22 +1,23 @@
 # Client (front end)
 - Majors:
-- - [ ] make the compilation process in the backend in the /compile route instead of making requesting the localhost:8080 from the front the doing all logic in the front, send the code to the  /compile with the problem id and make the /compile to the work
+- - [ ] why the system refreshes to the login ???
 - - [ ] fix the current user appears in the moderators and users list in admin dashboard
-- - [ ] fix editing tables in Admin Dashboard
-- - [ ] Update the Contest Workspace subbmision system
+- - [ ] fix editing modals in Admin Dashboard
+- - [ ] test the Contest Workspace submission system (*)
 - Minors:
+- - [ ] update the problem statment (description) creator to md instead of html
+- - [ ] inhance general frontend styling
+- - [ ] Refactor the Codebase
 
 # Server (Backend)
 - Majors:
-- - [ ] improve and impower the /compile route for contests and sheets
+- - [ ] add routes for getting sheet and contests subbmissions (*)
 - Minors:
-- - [ ] add subbmisson routes for hetting sheet and contests subbmissions
+- - [ ] add bloging system
 - - [ ] Add Cloudinary Support
-- - [ ] take a tour in the passport code
-- - [ ] Refactor the Codebase
+- - [ ] transform the admin to Multi-Role to customize permessions (lead - head - moderator)
 
-# Code Execution System
-- Majors:
-- - 
+# Code Execution System (Micro Service)
+- Majors: nothing
 - Minors:
-- - [ ] add time limit and run time errors detection
+- - [ ] add time limit support

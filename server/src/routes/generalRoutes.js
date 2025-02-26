@@ -27,7 +27,7 @@ router.get('/problems/:id', authenticate,problemController.getProblemById);
 router.get('/contests', authenticate,contestController.getAllContests);
 router.get('/contests/:id', authenticate,contestController.getContestById);
 router.get('/contests/:id/problems', authenticate,contestController.getContestProblems);
-router.get('/contests/:contestId/problems/:problemId', authenticate,contestController.getProblemFromContest);
+router.get('/contests/:contestId/problem/:problemId', authenticate,contestController.getProblemFromContest);
 router.get('/contests/leaderboard/:id', authenticate,contestController.getContestLeaderboard);
 
 module.exports = router;

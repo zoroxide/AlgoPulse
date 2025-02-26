@@ -32,7 +32,7 @@ function Scoreboard() {
                 <div className="shrink-0">
                   <img
                     alt={`${customer.name} image`}
-                    src={customer.imageUrl}
+                    src={customer.avatar}
                     className="rounded-full h-8 w-8"
                   />
                 </div>

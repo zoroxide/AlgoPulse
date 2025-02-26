@@ -38,7 +38,7 @@ module.exports = {
                             console.error("Compiler service response does not contain 'output':", data.error);
                             return {
                                 input: testCase.input,
-                                expectedOutput: testCase.output ? testCase.output.trim() + '\n' : "No expected output",
+                                expectedOutput: testCase.output,
                                 actualOutput: `Error during execution: ${data.error}`,
                                 passed: false,
                                 status: "Error",
@@ -46,9 +46,9 @@ module.exports = {
                         }
 
                         // Storing these data to Compare actual output with expected output in present
-                        const actualOutput = data.output.trim() + '\n';
-                        const expectedOutput = testCase.output ? testCase.output.trim() + '\n' : "No expected output";
-                        console.log(actualOutput, expectedOutput);
+                        const actualOutput = data.output;
+                        const expectedOutput = testCase.output;
+                        // console.log(actualOutput, expectedOutput);
 
                         return {
                             input: testCase.input,
@@ -61,7 +61,7 @@ module.exports = {
                         console.error("Error executing test case:", error);
                         return {
                             input: testCase.input,
-                            expectedOutput: testCase.output ? testCase.output.trim() + '\n' : "No expected output",
+                            expectedOutput: testCase.output,
                             actualOutput: "Error during execution, Please Contact any Admin",
                             err: error.message,
                             passed: false,
@@ -134,7 +134,7 @@ module.exports = {
                             console.error("Compiler service response does not contain 'output':", data.error);
                             return {
                                 input: testCase.input,
-                                expectedOutput: testCase.output ? testCase.output.trim() + '\n' : "No expected output",
+                                expectedOutput: testCase.output,
                                 actualOutput: `Error during execution: ${data.error}`,
                                 passed: false,
                                 status: "Error",
@@ -142,8 +142,8 @@ module.exports = {
                         }
 
                         // Storing these data to Compare actual output with expected output in present
-                        const actualOutput = data.output.trim() + '\n';
-                        const expectedOutput = testCase.output ? testCase.output.trim() + '\n' : "No expected output";
+                        const actualOutput = data.output;
+                        const expectedOutput = testCase.output;
                         console.log(actualOutput, expectedOutput);
 
                         return {
@@ -157,7 +157,7 @@ module.exports = {
                         console.error("Error executing test case:", error);
                         return {
                             input: testCase.input,
-                            expectedOutput: testCase.output ? testCase.output.trim() + '\n' : "No expected output",
+                            expectedOutput: testCase.output,
                             actualOutput: "Error during execution, Please Contact any Admin",
                             err: error.message,
                             passed: false,

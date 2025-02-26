@@ -42,15 +42,15 @@ const SetEditor = ({ problem }) => {
       const response = await axios.post("http://localhost:8080/", {
         code,
         language,
-        input: testCase.inputs.join("\n"),
+        input: testCase.input,
       });
   
-      const actualOutput = response.data.output.trim();
-      const expectedOutput = testCase.outputs[0].trim();
+      const actualOutput = response.data.output;
+      const expectedOutput = testCase.output;
   
       setTestResults([
         {
-          input: testCase.inputs.join("\n"),
+          input: testCase.input,
           expectedOutput,
           actualOutput,
           passed: actualOutput === expectedOutput,
@@ -60,8 +60,8 @@ const SetEditor = ({ problem }) => {
       console.error("Error executing test case:", error);
       setTestResults([
         {
-          input: problem.testcases[0].inputs.join("\n"),
-          expectedOutput: problem.testcases[0].outputs[0].trim(),
+          input: problem.testcases[0].input,
+          expectedOutput: problem.testcases[0].output,
           actualOutput: "Error during execution",
           passed: false,
         },
@@ -70,12 +70,11 @@ const SetEditor = ({ problem }) => {
       setIsLoading(false);
     }
   };
-  
 
   const handleRunAllTestCases = async () => {
     if (!problem || !problem.testcases || problem.testcases.length === 0) {
-        toast.error("No test cases available for this problem.");
-        return;
+      toast.error("No test cases available for this problem.");
+      return;
     }
 
     setIsLoading(true);
@@ -83,56 +82,33 @@ const SetEditor = ({ problem }) => {
     setOpenModal(true);
 
     try {
-        const results = await Promise.all(
-            problem.testcases.map(async (testCase) => {
-                try {
-                    const response = await axios.post("http://localhost:8080/", {
-                        code,
-                        language,
-                        input: testCase.inputs.join("\n"),
-                    });
+      const response = await axiosInstance.post("/compile/sheet", {
+        userID: user._id,
+        problemID: problem._id,
+        code,
+        language,
+      });
 
-                    const actualOutput = response.data.output.trim();
-                    const expectedOutput = testCase.outputs[0].trim();
+      const results = response.data.results.map((result, index) => ({
+        input: problem.testcases[index].input,
+        expectedOutput: problem.testcases[index].output,
+        actualOutput: result.actualOutput,
+        passed: result.passed,
+      }));
 
-                    return {
-                        input: testCase.inputs.join("\n"),
-                        expectedOutput,
-                        actualOutput,
-                        passed: actualOutput === expectedOutput,
-                    };
-                } catch (error) {
-                    console.error("Error executing test case:", error);
-                    return {
-                        input: testCase.inputs.join("\n"),
-                        expectedOutput: testCase.outputs[0].trim(),
-                        actualOutput: "Error during execution",
-                        passed: false,
-                    };
-                }
-            })
-        );
-
-        const allPassed = results.every(result => result.passed);
-
-        // Save submission
-        await axiosInstance.post("/submissions/create", {
-            user: user._id,
-            problem: problem._id,
-            time: Date.now(),
-            code,
-            accepted: allPassed,
-            failedTestcase: allPassed ? null : results.findIndex(result => !result.passed),
-        });
-
-        setTestResults(results);
+      setTestResults(results);
     } catch (error) {
-        console.error("Error running all test cases:", error);
+      console.error("Error running all test cases:", error);
+      setTestResults(problem.testcases.map((testCase) => ({
+        input: testCase.input,
+        expectedOutput: testCase.output,
+        actualOutput: "Error during execution",
+        passed: false,
+      })));
     } finally {
-        setIsLoading(false);
+      setIsLoading(false);
     }
   };
-  
 
   return (
     <>

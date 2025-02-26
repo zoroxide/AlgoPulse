@@ -27,16 +27,14 @@ const AddProblem = () => {
   useEffect(() => {
     const fetchAndCheckUser = async () => {
       try {
-        // Check if the user is an admin
         if (!user || !user.isAdmin) {
           console.log("User is not an admin. Redirecting...");
-          navigate('/login', { replace: true }); // Redirect to login or home page
+          navigate('/login', { replace: true });
         } else {
           console.log("User is an admin. Access granted.");
         }
       } catch (error) {
         console.error("Failed to perform admin check:", error);
-        // Optionally redirect to an error or login page
         navigate('/login', { replace: true });
       }
     };
@@ -96,7 +94,7 @@ const AddProblem = () => {
       toast.error("Both input and output are required!");
       return;
     }
-    setTestCases([...testcases, { inputs: [currentInput], outputs: [currentOutput] }]);
+    setTestCases([...testcases, { input: currentInput, output: currentOutput }]);
     setCurrentInput("");
     setCurrentOutput("");
     setModalOpen(false);
@@ -177,15 +175,15 @@ const AddProblem = () => {
               <div className="flex items-center gap-2">
                 <pre>
                   <code>
-                    <span className="font-medium">Inputs:</span>
-                    {testCase.inputs.join(", ")}
+                    <span className="font-medium">Input:</span>
+                    {testCase.input}
                   </code>
                 </pre>
               </div>
               <div className="flex items-center gap-2 mt-1">
                 <pre>
                   <code>
-                    <span className="font-medium">Outputs:</span> {testCase.outputs.join(", ")}
+                    <span className="font-medium">Output:</span> {testCase.output}
                   </code>
                 </pre>
               </div>

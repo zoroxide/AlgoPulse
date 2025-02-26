@@ -1,4 +1,5 @@
 const Problem = require("../../models/Problem");
+const TestCase = require("../../models/TestCase");
 const Sheet = require("../../models/Sheet");
 
 exports.createProblem = async (req, res) => {
@@ -9,26 +10,25 @@ exports.createProblem = async (req, res) => {
       return res.status(400).json({ message: "All fields are required." });
     }
 
-    if (
-      !Array.isArray(testcases) ||
-      !testcases.every((tc) => tc.inputs && tc.outputs)
-    ) {
+    if (!Array.isArray(testcases) || !testcases.every((tc) => tc.input && tc.output)) {
       return res.status(400).json({ message: "Invalid testcases format." });
     }
 
+    // Create test cases
+    const createdTestCases = await TestCase.insertMany(testcases);
+
+    // Create problem with references to test cases
     const newProblem = new Problem({
       name,
       description,
       difficulty,
-      testcases,
+      testcases: createdTestCases.map(tc => tc._id),
     });
 
     await newProblem.save();
-    res.status(201).json({ Message: "Problem created successfully!" });
+    res.status(201).json({ message: "Problem created successfully!" });
   } catch (err) {
-    res
-      .status(500)
-      .json({ message: "Failed to create problem", error: err.message });
+    res.status(500).json({ message: "Failed to create problem", error: err.message });
     console.error(err);
   }
 };
@@ -43,23 +43,26 @@ exports.editProblem = async (req, res) => {
         return res.status(400).json({ message: "Testcases must be an array." });
       }
       for (const testcase of testcases) {
-        if (
-          !Array.isArray(testcase.inputs) ||
-          !Array.isArray(testcase.outputs)
-        ) {
-          return res
-            .status(400)
-            .json({
-              message:
-                'Each testcase must have "inputs" and "outputs" as arrays.',
-            });
+        if (!testcase.input || !testcase.output) {
+          return res.status(400).json({ message: 'Each testcase must have "input" and "output".' });
         }
       }
+
+      // Update test cases
+      await Promise.all(testcases.map(async (tc) => {
+        if (tc._id) {
+          await TestCase.findByIdAndUpdate(tc._id, tc, { new: true, runValidators: true });
+        } else {
+          const newTestCase = new TestCase(tc);
+          await newTestCase.save();
+          tc._id = newTestCase._id;
+        }
+      }));
     }
 
     const updatedProblem = await Problem.findByIdAndUpdate(
       id,
-      { name, description, difficulty, testcases },
+      { name, description, difficulty, testcases: testcases.map(tc => tc._id) },
       { new: true, runValidators: true }
     );
     if (!updatedProblem) {
@@ -70,9 +73,7 @@ exports.editProblem = async (req, res) => {
       problem: updatedProblem,
     });
   } catch (err) {
-    res
-      .status(500)
-      .json({ message: "Error updating problem", error: err.message });
+    res.status(500).json({ message: "Error updating problem", error: err.message });
   }
 };
 
@@ -85,9 +86,7 @@ exports.deleteProblem = async (req, res) => {
     }
     res.json({ message: "Problem deleted successfully" });
   } catch (err) {
-    res
-      .status(500)
-      .json({ message: "Error deleting problem", error: err.message });
+    res.status(500).json({ message: "Error deleting problem", error: err.message });
   }
 };
 
@@ -106,9 +105,7 @@ exports.linkProblemsToSheet = async (req, res) => {
 
     const problems = await Problem.find({ _id: { $in: problemIds } });
     if (problems.length !== problemIds.length) {
-      return res
-        .status(404)
-        .json({ message: "One or more problems not found." });
+      return res.status(404).json({ message: "One or more problems not found." });
     }
 
     sheet.problems = [...new Set([...sheet.problems, ...problemIds])];

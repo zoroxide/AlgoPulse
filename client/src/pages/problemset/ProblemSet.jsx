@@ -63,10 +63,10 @@ const ProblemSet = () => {
         const userSubmissions = submissions.filter(sub => sub.problem._id === rowData._id);
         if (userSubmissions.length > 0) {
             const lastSubmission = userSubmissions[userSubmissions.length - 1];
-            return lastSubmission.accepted ? (
+            return lastSubmission.status === "Accepted" ? (
                 <span className="text-green-600">Accepted ✔</span>
             ) : (
-                <span className="text-red-600">Rejected ✘</span>
+                <span className="text-red-600">Wrong Answer ✘</span>
             );
         }
         return null;
@@ -168,9 +168,9 @@ const ProblemSet = () => {
                         </Table.Head>
                         <Table.Body>
                             {selectedProblemSubmissions.map((submission) => (
-                                <Table.Row key={submission._id} className={submission.accepted ? 'bg-green-100' : 'bg-red-100'}>
+                                <Table.Row key={submission._id} className={submission.status === "Accepted" ? 'bg-green-100' : 'bg-red-100'}>
                                     <Table.Cell>{submission.user.username}</Table.Cell>
-                                    <Table.Cell>{submission.accepted ? 'Accepted' : 'Rejected'}</Table.Cell>
+                                    <Table.Cell>{submission.status}</Table.Cell>
                                     <Table.Cell>{new Date(submission.time).toLocaleString()}</Table.Cell>
                                     <Table.Cell>
                                         <Button onClick={() => handleSubmissionClick(submission)}>
@@ -195,7 +195,7 @@ const ProblemSet = () => {
                             <p><strong>User:</strong> {selectedSubmission.user.username}</p>
                             <p><strong>Problem:</strong> {selectedSubmission.problem.name}</p>
                             <p><strong>Time:</strong> {new Date(selectedSubmission.time).toLocaleString()}</p>
-                            <p><strong>Status:</strong> {selectedSubmission.accepted ? 'Accepted' : 'Rejected'}</p>
+                            <p><strong>Status:</strong> {selectedSubmission.status}</p>
                             <p><strong>Code:</strong></p>
                             <MonacoEditor
                                 height="400px"

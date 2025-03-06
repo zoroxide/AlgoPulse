@@ -157,20 +157,20 @@ const Dashboard = () => {
           <Table.Head>
             <Table.HeadCell>Problem Name</Table.HeadCell>
             <Table.HeadCell>Time</Table.HeadCell>
-            <Table.HeadCell>Accepted</Table.HeadCell>
+            <Table.HeadCell>Status</Table.HeadCell>
             <Table.HeadCell>Failed Testcase</Table.HeadCell>
             <Table.HeadCell>Actions</Table.HeadCell>
           </Table.Head>
           <Table.Body>
             {submissions.map((submission) => (
-              <Table.Row key={submission._id} className={submission.accepted ? 'bg-green-100' : 'bg-red-100'}>
+              <Table.Row key={submission._id} className={submission.status === "Accepted" ? 'bg-green-100' : 'bg-red-100'}>
                 <Table.Cell>
                   <button onClick={() => handleProblemClick(submission.problem._id)}>
                     {submission.problem.name}
                   </button>
                 </Table.Cell>
                 <Table.Cell>{new Date(submission.time).toLocaleString()}</Table.Cell>
-                <Table.Cell>{submission.accepted ? 'Yes' : 'No'}</Table.Cell>
+                <Table.Cell>{submission.status === "Accepted" ? 'Accepted' : 'Wrong Answer'}</Table.Cell>
                 <Table.Cell>
                   {submission.failedTestcase !== null ? (
                     <button onClick={() => handleSubmissionClick(submission)}>
@@ -197,7 +197,7 @@ const Dashboard = () => {
               <p><strong>User:</strong> {selectedSubmission.user.username}</p>
               <p><strong>Problem:</strong> {selectedSubmission.problem.name}</p>
               <p><strong>Time:</strong> {new Date(selectedSubmission.time).toLocaleString()}</p>
-              <p><strong>Status:</strong> {selectedSubmission.accepted ? 'Accepted' : 'Rejected'}</p>
+              <p><strong>Status:</strong> {selectedSubmission.status === "Accepted" ? 'Accepted' : 'Wrong Answer'}</p>
               <p><strong>Code:</strong></p>
               <MonacoEditor
                 height="400px"
@@ -230,31 +230,13 @@ const Dashboard = () => {
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 />
               </div>
-              <div>
-                <label htmlFor="phone" className="block text-sm font-medium text-gray-700">Phone</label>
-                <input
-                  type="text"
-                  id="phone"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                />
-              </div>
-              <div>
-                <label htmlFor="codeforcesHandle" className="block text-sm font-medium text-gray-700">Codeforces Handle</label>
-                <input
-                  type="text"
-                  id="codeforcesHandle"
-                  value={codeforcesHandle}
-                  onChange={(e) => setCodeforcesHandle(e.target.value)}
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                />
-              </div>
             </div>
           )}
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={handleCloseModal}>Close</Button>
+          <Button color="gray" onClick={handleCloseModal}>
+            Close
+          </Button>
         </Modal.Footer>
       </Modal>
     </div>

@@ -46,21 +46,21 @@ const SheetPage = () => {
             }
         };
 
-        const fetchUserSubmissions = async () => {
+        const fetchSheetSubmissions = async () => {
             try {
-                const response = await axiosInstance.get(`/submissions/user/${user._id}`);
+                const response = await axiosInstance.get(`/submissions/sheet/${sheetId}`);
                 setSubmissions(response.data);
             } catch (error) {
-                console.error('Error fetching user submissions:', error);
+                console.error('Error fetching sheet submissions:', error);
             }
         };
 
-        if (sheetId && user) {
+        if (sheetId) {
             fetchSheet();
             fetchSheetProblems();
-            fetchUserSubmissions();
+            fetchSheetSubmissions();
         }
-    }, [sheetId, user]);
+    }, [sheetId]);
 
     const difficultyBodyTemplate = (rowData) => {
         const difficultyColors = {
@@ -79,7 +79,7 @@ const SheetPage = () => {
         const userSubmissions = submissions.filter(sub => sub.problem._id === rowData._id);
         if (userSubmissions.length > 0) {
             const lastSubmission = userSubmissions[userSubmissions.length - 1];
-            return lastSubmission.accepted ? (
+            return lastSubmission.status === "Accepted" ? (
                 <span className="text-green-600">Accepted ✔</span>
             ) : (
                 <span className="text-red-600">Rejected ✘</span>
@@ -180,14 +180,16 @@ const SheetPage = () => {
                             <Table.HeadCell>User</Table.HeadCell>
                             <Table.HeadCell>Status</Table.HeadCell>
                             <Table.HeadCell>Time</Table.HeadCell>
+                            <Table.HeadCell>Test Case</Table.HeadCell>
                             <Table.HeadCell>Actions</Table.HeadCell>
                         </Table.Head>
                         <Table.Body>
                             {selectedProblemSubmissions.map((submission) => (
-                                <Table.Row key={submission._id} className={submission.accepted ? 'bg-green-100' : 'bg-red-100'}>
+                                <Table.Row key={submission._id} className={submission.status === "Accepted" ? 'bg-green-100' : 'bg-red-100'}>
                                     <Table.Cell>{submission.user.username}</Table.Cell>
-                                    <Table.Cell>{submission.accepted ? 'Accepted' : 'Rejected'}</Table.Cell>
+                                    <Table.Cell>{submission.status === "Accepted" ? 'Accepted' : 'Wrong Answer'}</Table.Cell>
                                     <Table.Cell>{new Date(submission.time).toLocaleString()}</Table.Cell>
+                                    <Table.Cell>{submission.failedTestcase !== null ? submission.failedTestcase : 'N/A'}</Table.Cell>
                                     <Table.Cell>
                                         <Button onClick={() => handleSubmissionClick(submission)}>
                                             View Code
@@ -211,7 +213,7 @@ const SheetPage = () => {
                             <p><strong>User:</strong> {selectedSubmission.user.username}</p>
                             <p><strong>Problem:</strong> {selectedSubmission.problem.name}</p>
                             <p><strong>Time:</strong> {new Date(selectedSubmission.time).toLocaleString()}</p>
-                            <p><strong>Status:</strong> {selectedSubmission.accepted ? 'Accepted' : 'Rejected'}</p>
+                            <p><strong>Status:</strong> {selectedSubmission.status === "Accepted" ? 'Accepted' : 'Wrong Answer'}</p>
                             <p><strong>Code:</strong></p>
                             <MonacoEditor
                                 height="400px"

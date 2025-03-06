@@ -46,7 +46,7 @@ function Explore() {
     <div className="explore-container">
       <div className="left-section">
         <div className="sheets-section">
-          <h1 className="sheets-title">Roadmaps (sheets) 🚴🏽‍♀️</h1>
+          <h1 className="sheets-title">🚴🏽‍♀️ Sheets 🚴🏽‍♀️</h1>
           <br />
           {sheets.length === 0 ? (
             <div>No sheets available.</div>
@@ -63,7 +63,7 @@ function Explore() {
           )}
         </div>
         <div className="contests-section">
-          <h1 className="sheets-title">Contests ☠️</h1>
+          <h1 className="sheets-title">⚔️ Contests ⚔️</h1>
           <br />
           {contests.length === 0 ? (
             <div>No upcoming or running contests available.</div>

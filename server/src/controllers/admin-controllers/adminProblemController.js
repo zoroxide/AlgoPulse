@@ -1,5 +1,4 @@
 const Problem = require("../../models/Problem");
-const TestCase = require("../../models/TestCase");
 const Sheet = require("../../models/Sheet");
 
 exports.createProblem = async (req, res) => {
@@ -14,15 +13,12 @@ exports.createProblem = async (req, res) => {
       return res.status(400).json({ message: "Invalid testcases format." });
     }
 
-    // Create test cases
-    const createdTestCases = await TestCase.insertMany(testcases);
-
-    // Create problem with references to test cases
+    // Create problem with embedded test cases
     const newProblem = new Problem({
       name,
       description,
       difficulty,
-      testcases: createdTestCases.map(tc => tc._id),
+      testcases,
     });
 
     await newProblem.save();
@@ -47,22 +43,11 @@ exports.editProblem = async (req, res) => {
           return res.status(400).json({ message: 'Each testcase must have "input" and "output".' });
         }
       }
-
-      // Update test cases
-      await Promise.all(testcases.map(async (tc) => {
-        if (tc._id) {
-          await TestCase.findByIdAndUpdate(tc._id, tc, { new: true, runValidators: true });
-        } else {
-          const newTestCase = new TestCase(tc);
-          await newTestCase.save();
-          tc._id = newTestCase._id;
-        }
-      }));
     }
 
     const updatedProblem = await Problem.findByIdAndUpdate(
       id,
-      { name, description, difficulty, testcases: testcases.map(tc => tc._id) },
+      { name, description, difficulty, testcases },
       { new: true, runValidators: true }
     );
     if (!updatedProblem) {

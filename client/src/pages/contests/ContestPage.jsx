@@ -7,6 +7,7 @@ import { HiClipboardList } from "react-icons/hi";
 import { MdDashboard } from "react-icons/md";
 import axiosInstance from '../../utils/axiosInstance';
 import { AuthContext } from '../../context/AuthContext';
+import MonacoEditor from '@monaco-editor/react';
 
 const ContestPage = () => {
     const { user } = useContext(AuthContext);
@@ -124,13 +125,13 @@ const ContestPage = () => {
         const userSubmissions = submissions.filter(sub => sub.problem._id === rowData._id);
         if (userSubmissions.length > 0) {
             const lastSubmission = userSubmissions[userSubmissions.length - 1];
-            return lastSubmission.accepted ? (
+            return lastSubmission.status === "Accepted" ? (
                 <span className="text-green-600">Accepted ✔</span>
             ) : (
-                <span className="text-red-600">Rejected ✘</span>
+                <span className="text-red-600">Wrong Answer ✘</span>
             );
         }
-        return null;
+        return <span className="text-gray-600">No submissions made</span>;
     };
 
     const handleRowClick = (rowData) => {
@@ -248,14 +249,16 @@ const ContestPage = () => {
                             <Table.HeadCell>User</Table.HeadCell>
                             <Table.HeadCell>Status</Table.HeadCell>
                             <Table.HeadCell>Time</Table.HeadCell>
+                            <Table.HeadCell>Test Case</Table.HeadCell>
                             <Table.HeadCell>Actions</Table.HeadCell>
                         </Table.Head>
                         <Table.Body>
                             {selectedProblemSubmissions.map((submission) => (
-                                <Table.Row key={submission._id} className={submission.accepted ? 'bg-green-100' : 'bg-red-100'}>
+                                <Table.Row key={submission._id} className={submission.status === "Accepted" ? 'bg-green-100' : 'bg-red-100'}>
                                     <Table.Cell>{submission.user.username}</Table.Cell>
-                                    <Table.Cell>{submission.accepted ? 'Accepted' : 'Rejected'}</Table.Cell>
+                                    <Table.Cell>{submission.status === "Accepted" ? 'Accepted' : 'Wrong Answer'}</Table.Cell>
                                     <Table.Cell>{new Date(submission.time).toLocaleString()}</Table.Cell>
+                                    <Table.Cell>{submission.failedTestcase !== null ? submission.failedTestcase : 'N/A'}</Table.Cell>
                                     <Table.Cell>
                                         <Button onClick={() => handleSubmissionClick(submission)}>
                                             View Code
@@ -278,7 +281,7 @@ const ContestPage = () => {
                         <div>
                             <p><strong>User:</strong> {selectedSubmission.user.username}</p>
                             <p><strong>Time:</strong> {new Date(selectedSubmission.time).toLocaleString()}</p>
-                            <p><strong>Status:</strong> {selectedSubmission.accepted ? 'Accepted' : 'Rejected'}</p>
+                            <p><strong>Status:</strong> {selectedSubmission.status === "Accepted" ? 'Accepted' : 'Wrong Answer'}</p>
                             <p><strong>Code:</strong></p>
                             <MonacoEditor
                                 height="400px"

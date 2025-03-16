@@ -76,7 +76,8 @@ module.exports = {
   getContestLeaderboard: async (req, res) => {
     const { id } = req.params;
     try {
-      const submissions = await Submission.find({ contest: id, accepted: true }).populate("user");
+      const submissions = await Submission.find({ contest: id, status: "Accepted" }).populate("user");
+      // console.log(submissions);
       const leaderboard = submissions.reduce((acc, submission) => {
         const userId = submission.user._id.toString();
         if (!acc[userId]) {

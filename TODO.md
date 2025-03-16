@@ -1,18 +1,20 @@
 # Client (front end)
 - Majors:
+- - [ ] test the Contest Workspace submission system (*)
 - - [ ] why the frontend system keep refreshes to the login navigating to a link in the app ???
 - - [ ] fix the current user appears in the moderators and users list in admin dashboard
 - - [ ] fix editing modals in Admin Dashboard
-- - [ ] test the Contest Workspace submission system (*)
 - Minors:
 - - [ ] Update the Monaco Editor Coloring issue in switching the language
-- - [ ] Add CustoM Coloring for the ERROR status in the submission (gray)
+- - [ ] Add Custom Coloring for the ERROR status in the submission (gray)
 - - [ ] update the problem statment (description) creator to md instead of html
 - - [ ] inhance general frontend styling
 - - [ ] Refactor the Codebase
 
 # Server (Backend)
-- Majors: Nothing
+- Majors: 
+- - [ ] Fix Leaderboard issue in general contest controller (*)
+- - [ ] Add Custom Template Support
 - Minors:
 - - [ ] add bloging system
 - - [ ] Add Cloudinary Support

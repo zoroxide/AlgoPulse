@@ -126,9 +126,9 @@ const ContestPage = () => {
         if (userSubmissions.length > 0) {
             const lastSubmission = userSubmissions[userSubmissions.length - 1];
             return lastSubmission.status === "Accepted" ? (
-                <span className="text-green-600">Accepted ✔</span>
+                <span className="text-green-600">Accepted 🎈</span>
             ) : (
-                <span className="text-red-600">Wrong Answer ✘</span>
+                <span className="text-red-600">Rejected ✘</span>
             );
         }
         return <span className="text-gray-600">No submissions made</span>;
@@ -190,14 +190,14 @@ const ContestPage = () => {
                             className="p-datatable-custom"
                         >
                             <Column field="name" header="Problem" filter filterPlaceholder="Search by name" style={{ minWidth: '12rem' }} />
-                            <Column
+                            {/* <Column
                                 field="difficulty"
                                 header="Difficulty"
                                 body={difficultyBodyTemplate}
                                 filter
                                 filterPlaceholder="Search by difficulty"
                                 style={{ minWidth: '12rem' }}
-                            />
+                            /> */}
                             <Column
                                 field="submissionStatus"
                                 header="Submission Status"

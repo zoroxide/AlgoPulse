@@ -14,11 +14,13 @@
 # Server (Backend)
 - Bugs: Nothing
 - Majors: Nothing
-- Minors:
-- - [ ] Add Custom Template Support
-- - [ ] add bloging system
-- - [ ] Add Cloudinary Support
+- Minors: Nothing
+ Support
+- - [ ] Add and Test Custom Template
+- - [ ] Add and Test bloging system
+- - [ ] Add and Test file Storage Support
 - - [ ] transform the admin to Multi-Role to customize permessions (lead - head - moderator)
+- - [ ] Refactor Codebase to real MVC
 
 # Code Execution System (Micro Service)
 - Majors: Nothing

@@ -9,7 +9,7 @@ const opts = {
 
 passport.use(
   new JwtStrategy(opts, (jwtPayload, done) => {
-    // Find user in your database
+    // Find user in database
     User.findById(jwtPayload.id)
       .then((user) => {
         if (user) {

@@ -64,7 +64,7 @@ const ContestWorkspace = () => {
 
       {/* Code Editor Section */}
       <div className="flex flex-col" style={{ width: `${100 - leftWidth}%` }}>
-        <ContestEditor problem={problem} />
+        <ContestEditor problem={problem} contest={contestId} />
       </div>
     </div>
   );

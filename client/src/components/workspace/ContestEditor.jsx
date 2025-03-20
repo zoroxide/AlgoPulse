@@ -9,7 +9,7 @@ import axiosInstance from "../../utils/axiosInstance";
 import { Modal } from "flowbite-react";
 import { AuthContext } from '../../context/AuthContext';
 
-const ContestEditor = ({ problem }) => {
+const ContestEditor = ({ problem, contest}) => {
   const { user } = useContext(AuthContext);
   const [language, setLanguage] = useState("cpp");
   const [theme, setTheme] = useState("vs-dark");
@@ -38,6 +38,7 @@ const ContestEditor = ({ problem }) => {
       const response = await axiosInstance.post("/compile/contest", {
         userID: user._id,
         problemID: problem._id,
+        contestID: contest,
         code,
         language,
       });

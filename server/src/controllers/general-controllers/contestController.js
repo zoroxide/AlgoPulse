@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const Contest = require("../../models/Contest");
 const Submission = require("../../models/Submission");
+const User = require("../../models/User");
 
 module.exports = {
   getAllContests: async (req, res) => {
@@ -33,13 +34,11 @@ module.exports = {
   getProblemFromContest: async (req, res) => {
     const { contestId, problemId } = req.params;
     try {
-
-      if(!contestId || !problemId) {
+      if (!contestId || !problemId) {
         return res.status(400).json({ message: "Invalid contest or problem ID" });
       }
 
       const contest = await Contest.findById(contestId).populate("problems");
-      
       if (!contest) {
         return res.status(404).json({ message: "Contest not found" });
       }
@@ -76,19 +75,46 @@ module.exports = {
   getContestLeaderboard: async (req, res) => {
     const { id } = req.params;
     try {
-      const submissions = await Submission.find({ contest: id, status: "Accepted" }).populate("user");
-      // console.log(submissions);
-      const leaderboard = submissions.reduce((acc, submission) => {
+      const contest = await Contest.findById(id).populate({
+        path: 'submissions',
+        populate: [
+          { path: 'user', model: 'User' },
+          { path: 'problem', model: 'Problem' }
+        ]
+      });
+
+      if (!contest) {
+        return res.status(404).json({ message: "Contest not found" });
+      }
+
+      // Filter accepted submissions
+      const acceptedSubmissions = contest.submissions.filter(submission => submission.status === "Accepted");
+
+      // Group submissions by user and sort by time
+      const userSubmissions = acceptedSubmissions.reduce((acc, submission) => {
         const userId = submission.user._id.toString();
         if (!acc[userId]) {
-          acc[userId] = { user: submission.user, problemsSolved: 0 };
+          acc[userId] = { user: submission.user, submissions: [] };
         }
-        acc[userId].problemsSolved += 1;
+        acc[userId].submissions.push(submission);
         return acc;
       }, {});
 
-      const sortedLeaderboard = Object.values(leaderboard).sort((a, b) => b.problemsSolved - a.problemsSolved);
-      res.json(sortedLeaderboard);
+      // Sort users by the earliest submission time
+      const sortedUsers = Object.values(userSubmissions).sort((a, b) => {
+        const aEarliestTime = Math.min(...a.submissions.map(sub => new Date(sub.time).getTime()));
+        const bEarliestTime = Math.min(...b.submissions.map(sub => new Date(sub.time).getTime()));
+        return aEarliestTime - bEarliestTime;
+      });
+
+      // Format the leaderboard
+      const leaderboard = sortedUsers.map(userSub => ({
+        user: userSub.user,
+        problemsSolved: userSub.submissions.length,
+        earliestSubmissionTime: new Date(Math.min(...userSub.submissions.map(sub => new Date(sub.time).getTime())))
+      }));
+
+      res.json(leaderboard);
     } catch (err) {
       res.status(500).json({ message: "Error fetching leaderboard", error: err.message });
     }

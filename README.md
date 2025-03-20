@@ -73,7 +73,7 @@ this system will help you with:
 ### Sheets (Roadmaps) Tab
 ![image](https://github.com/user-attachments/assets/459e773a-4bfa-4893-8bc6-5c019cfe630b)
 
-### Contest Tab (also there's a toast for update notifications or any action on all of the platform not only the admin dashboard :) )
+### Contest Tab , also there's a toast for update notifications or any action on all of the platform not only the admin dashboard :)
 ![image](https://github.com/user-attachments/assets/2369b945-e56e-4d63-b502-81f83140f29a)
 
 ### Users Tab
@@ -93,16 +93,5 @@ this system will help you with:
 
 ### Contest Creation Page
 ![image](https://github.com/user-attachments/assets/3d127b1f-d4fa-44ec-8a67-b988fd3c7e15)
-
-
-
-
-
-
-
-
-
-
-
 
 

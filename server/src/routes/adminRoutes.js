@@ -5,6 +5,7 @@ const adminSheetController = require("../controllers/admin-controllers/adminShee
 const adminContestController = require('../controllers/admin-controllers/adminContestController');
 const adminProblemController = require("../controllers/admin-controllers/adminProblemController");
 const adminUserController = require("../controllers/admin-controllers/adminUserController");
+const adminBlogController = require("../controllers/admin-controllers/adminBlogController");
 
 // "Sheet" Admin operations
 router.post("/sheet/create", checkAdmin, adminSheetController.createSheet);
@@ -27,5 +28,10 @@ router.post('/problem/link', checkAdmin, adminProblemController.linkProblemsToSh
 // "User" Admin operations
 router.delete('/user/delete/:id', checkAdmin, adminUserController.deleteUser);
 router.put('/user/make-admin/:id', checkAdmin, adminUserController.makeAdmin);
+
+// "Blog" Admin Operations
+router.post('/blogs', checkAdmin, adminBlogController.createBlog);
+router.put('/blogs/:id', checkAdmin, adminBlogController.editBlog);
+router.delete('/blogs/:id', checkAdmin, adminBlogController.deleteBlog);
 
 module.exports = router;

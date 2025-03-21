@@ -42,7 +42,7 @@ const ModeratorsTable = () => {
           Make Normal User
         </Button>
         <Button color="failure" size="xs" onClick={() => handleDelete(rowData)}>
-          Pan
+          Delete
         </Button>
       </div>
     );

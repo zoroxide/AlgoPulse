@@ -2,6 +2,7 @@
 - Bugs:
 - - [ ] why the frontend system keep refreshes to the login navigating to a link in the app ???
 - Majors:
+- - [ ] Implement Blog Interface
 - - [ ] fix editing modals in Admin Dashboard
 - - [ ] fix the current user appears in the moderators and users list in admin dashboard
 - Minors:
@@ -17,7 +18,6 @@
 - Minors: Nothing
  Support
 - - [ ] Add and Test Custom Template
-- - [ ] Add and Test bloging system
 - - [ ] Add and Test file Storage Support
 - - [ ] transform the admin to Multi-Role to customize permessions (lead - head - moderator)
 - - [ ] Refactor Codebase to real MVC

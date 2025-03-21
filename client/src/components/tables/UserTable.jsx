@@ -5,7 +5,7 @@ import { Button } from "flowbite-react";
 import { AuthContext } from '../../context/AuthContext';
 import './UserTable.css';
 import { toast, ToastContainer } from 'react-toastify';
-import axiosInstance from '../../utils/axiosInstance'; // Ensure axiosInstance is properly imported
+import axiosInstance from '../../utils/axiosInstance';
 
 const UserTable = () => {
   const [users, setUsers] = useState([]);
@@ -41,7 +41,7 @@ const UserTable = () => {
           Make Admin
         </Button>
         <Button color="failure" size="xs" onClick={() => handleDelete(rowData)}>
-          Pan
+          Delete
         </Button>
       </div>
     );
@@ -51,7 +51,7 @@ const UserTable = () => {
     axiosInstance.put(`admin/user/make-admin/${rowData._id}`)
       .then(response => {
         toast.success("User promoted to admin successfully!");
-        console.log("User promoted to admin: ", response.data);
+        // console.log("User promoted to admin: ", response.data);
       })
       .catch(error => {
         toast.error("Error promoting user to admin!");
@@ -63,7 +63,7 @@ const UserTable = () => {
     axiosInstance.delete(`admin/user/delete/${rowData._id}`)
       .then(response => {
         toast.success("User panned successfully!");
-        console.log("User panned: ", response.data);
+        // console.log("User panned: ", response.data);
       })
       .catch(error => {
         toast.error("Error panning user!");

@@ -1,5 +1,5 @@
 import { Sidebar } from "flowbite-react";
-import { HiArchive, HiChartPie, HiInbox, HiShoppingBag, HiUser, HiViewBoards } from "react-icons/hi";
+import { HiArchive, HiChartPie, HiFlag, HiInbox, HiOutlineHand, HiShoppingBag, HiUser, HiViewBoards } from "react-icons/hi";
 
 const AdminSidebar = ({ onSelectTab }) => {
   return (
@@ -47,6 +47,13 @@ const AdminSidebar = ({ onSelectTab }) => {
             onClick={() => onSelectTab("moderators")}
           >
             Moderators
+          </Sidebar.Item>
+          <Sidebar.Item
+            href="#"
+            icon={HiFlag}
+            onClick={() => onSelectTab("blogs")}
+          >
+            Blogs
           </Sidebar.Item>
         </Sidebar.ItemGroup>
       </Sidebar.Items>

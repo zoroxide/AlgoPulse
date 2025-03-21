@@ -8,6 +8,7 @@ import ContestTable from '../../components/tables/ContestTable';
 import AdminSidebar from "../../components/admin-sidebar/Sidebar";
 import AdminDashboard from './AdminDashboard';
 import { AuthContext } from '../../context/AuthContext';
+import BlogsTable from '../../components/tables/BlogsTable';
 
 const Panel = () => {
   const { user } = useContext(AuthContext);
@@ -44,6 +45,8 @@ const Panel = () => {
         return <SheetsTable />;
       case "contest":
         return <ContestTable />;
+      case "blogs":
+        return <BlogsTable />;
       default:
         return <AdminDashboard />;
     }

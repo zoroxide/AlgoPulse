@@ -55,6 +55,11 @@ exports.upvoteBlog = async (req, res) => {
             return res.status(400).json({ message: 'You have already upvoted this blog' });
         }
 
+        // shhhhhhhhhhhhhhhhh yarab ma7ad ya5od baloh men el 5ara dah
+        if (blog.downvotedBy.includes(userId)) {
+            blog.downvotes -= 1;
+        }
+
         // Remove user from downvotedBy array if they have downvoted the blog
         blog.downvotedBy = blog.downvotedBy.filter(user => user.toString() !== userId.toString());
 
@@ -94,7 +99,12 @@ exports.downvoteBlog = async (req, res) => {
             return res.status(400).json({ message: 'You have already downvoted this blog' });
         }
 
-        // Remove user from upvotedBy array if they have upvoted the blog
+        // shhhhhhhhhhhhhhhhh yarab ma7ad ya5od baloh men el 5ara dah
+        if (blog.upvotedBy.includes(userId)) {
+            blog.upvotes -= 1;
+        }
+
+        // Remove user from upvotedBy array if he was upvoted the blog
         blog.upvotedBy = blog.upvotedBy.filter(user => user.toString() !== userId.toString());
 
         blog.downvotes += 1;

@@ -2,7 +2,6 @@
 - Bugs:
 - - [ ] why the frontend system keep refreshes to the login navigating to a link in the app ???
 - Majors:
-- - [ ] Implement Blog Interface
 - - [ ] fix editing modals in Admin Dashboard
 - - [ ] fix the current user appears in the moderators and users list in admin dashboard
 - Minors:

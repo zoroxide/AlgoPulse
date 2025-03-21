@@ -47,6 +47,9 @@ this system will help you with:
 ### Contest Page
 ![image](https://github.com/user-attachments/assets/0ac44af7-82bb-4fea-901e-55da90496f44)
 
+### Blogs Page
+![image](https://github.com/user-attachments/assets/92679638-4152-4361-baf1-2ff5f30cc7ce)
+
 ### User Submission History
 ![image](https://github.com/user-attachments/assets/1ab1daad-de21-40ba-8a68-919d0f9fb922)
 
@@ -73,11 +76,15 @@ this system will help you with:
 ### Sheets (Roadmaps) Tab
 ![image](https://github.com/user-attachments/assets/459e773a-4bfa-4893-8bc6-5c019cfe630b)
 
-### Contest Tab , also there's a toast for update notifications or any action on all of the platform not only the admin dashboard :)
+### Contest Tab
+- also there's a toast for update notifications or any action on all of the platform not only the admin dashboard :)
 ![image](https://github.com/user-attachments/assets/2369b945-e56e-4d63-b502-81f83140f29a)
 
 ### Users Tab
 ![image](https://github.com/user-attachments/assets/40fa3406-3971-4a25-b243-0d2fc6c99399)
+
+### Blogs Tab
+![image](https://github.com/user-attachments/assets/bbce1550-1a9b-4afb-996a-0ded28d4a58b)
 
 ### Moderators Tab
 ![image](https://github.com/user-attachments/assets/03e37ba8-a40b-409d-b108-e0b31a43e07e)
@@ -93,5 +100,9 @@ this system will help you with:
 
 ### Contest Creation Page
 ![image](https://github.com/user-attachments/assets/3d127b1f-d4fa-44ec-8a67-b988fd3c7e15)
+
+### Blog Creation Page
+![image](https://github.com/user-attachments/assets/3a205ebb-afb3-4d4d-b25e-0422321c0bbb)
+
 
 

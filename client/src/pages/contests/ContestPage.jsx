@@ -2,12 +2,13 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
-import { Spinner, Alert, Button, Modal, Table, Tabs } from 'flowbite-react';
+import { Spinner, Alert, Button, Modal, Tabs } from 'flowbite-react';
 import { HiClipboardList } from "react-icons/hi";
 import { MdDashboard } from "react-icons/md";
 import axiosInstance from '../../utils/axiosInstance';
 import { AuthContext } from '../../context/AuthContext';
 import MonacoEditor from '@monaco-editor/react';
+import '../../components/tables/UserTable.css';
 
 const ContestPage = () => {
     const { user } = useContext(AuthContext);
@@ -33,7 +34,7 @@ const ContestPage = () => {
                 const response = await axiosInstance.get(`/contests/${contestId}`);
                 setContest(response.data);
             } catch (err) {
-                setError('Failed to load the contest. Please try again later, contest page');
+                setError('Failed to load the contest. Please try again later.');
                 console.error('Error fetching contest:', err);
             } finally {
                 setIsLoading(false);
@@ -53,7 +54,13 @@ const ContestPage = () => {
         const fetchLeaderboard = async () => {
             try {
                 const response = await axiosInstance.get(`/contests/leaderboard/${contestId}`);
-                setLeaderboard(response.data);
+                const sortedLeaderboard = response.data.sort((a, b) => {
+                    if (b.problemsSolved !== a.problemsSolved) {
+                        return b.problemsSolved - a.problemsSolved;
+                    }
+                    return new Date(a.earliestAcceptedSubmission) - new Date(b.earliestAcceptedSubmission);
+                });
+                setLeaderboard(sortedLeaderboard);
             } catch (err) {
                 setError('Failed to load the leaderboard. Please try again later.');
                 console.error('Error fetching leaderboard:', err);
@@ -154,6 +161,27 @@ const ContestPage = () => {
         setIsSubmissionModalOpen(true);
     };
 
+    const balloonsTemplate = (rowData) => {
+        return '🎈'.repeat(rowData.problemsSolved);
+    };
+
+    const rowClassName = (rowData) => {
+        return rowData.user._id === user._id ? 'bg-green-100' : '';
+    };
+
+    const userTemplate = (rowData) => {
+        return (
+            <div className="flex items-center">
+                <img
+                    alt={`${rowData.user.username} avatar`}
+                    src={rowData.user.avatar}
+                    className="rounded-full h-8 w-8 mr-2"
+                />
+                <span>{rowData.user.username}</span>
+            </div>
+        );
+    };
+
     if (isLoading) {
         return (
             <div className="flex justify-center items-center h-screen">
@@ -190,14 +218,14 @@ const ContestPage = () => {
                             className="p-datatable-custom"
                         >
                             <Column field="name" header="Problem" filter filterPlaceholder="Search by name" style={{ minWidth: '12rem' }} />
-                            {/* <Column
+                            <Column
                                 field="difficulty"
                                 header="Difficulty"
                                 body={difficultyBodyTemplate}
                                 filter
                                 filterPlaceholder="Search by difficulty"
                                 style={{ minWidth: '12rem' }}
-                            /> */}
+                            />
                             <Column
                                 field="submissionStatus"
                                 header="Submission Status"
@@ -221,22 +249,23 @@ const ContestPage = () => {
                 <Tabs.Item title="Leaderboard" icon={MdDashboard}>
                     <h2 className="text-xl font-semibold mt-6 mb-4">Leaderboard</h2>
                     <div className="leaderboard-table-container p-6">
-                        <Table>
-                            <Table.Head>
-                                <Table.HeadCell>Rank</Table.HeadCell>
-                                <Table.HeadCell>User</Table.HeadCell>
-                                <Table.HeadCell>Problems Solved</Table.HeadCell>
-                            </Table.Head>
-                            <Table.Body>
-                                {leaderboard.map((entry, index) => (
-                                    <Table.Row key={entry.user._id}>
-                                        <Table.Cell>{index + 1}</Table.Cell>
-                                        <Table.Cell>{entry.user.username}</Table.Cell>
-                                        <Table.Cell>{entry.problemsSolved}</Table.Cell>
-                                    </Table.Row>
-                                ))}
-                            </Table.Body>
-                        </Table>
+                        <DataTable
+                            value={leaderboard}
+                            paginator
+                            rows={10}
+                            dataKey="_id"
+                            loading={isLoading}
+                            globalFilterFields={['user.username']}
+                            emptyMessage="No leaderboard entries found."
+                            className="p-datatable-custom"
+                            rowClassName={rowClassName}
+                        >
+                            <Column field="rank" header="Rank" body={(rowData, options) => options.rowIndex + 1} style={{ minWidth: '6rem' }} />
+                            <Column field="user.username" header="User" body={userTemplate} filter filterPlaceholder="Search by username" style={{ minWidth: '12rem' }} />
+                            <Column field="problemsSolved" header="Problems Solved" style={{ minWidth: '12rem' }} />
+                            <Column field="balloons" header="Balloons" body={balloonsTemplate} style={{ minWidth: '12rem' }} />
+                            <Column field="penalty" header="Penalty" body={(rowData, options) => rowData.problemsSolved * options.rowIndex + 1} style={{ minWidth: '12rem' }} />
+                        </DataTable>
                     </div>
                 </Tabs.Item>
             </Tabs>
@@ -244,30 +273,25 @@ const ContestPage = () => {
             <Modal show={isModalOpen} onClose={() => setIsModalOpen(false)}>
                 <Modal.Header>Submissions for Problem</Modal.Header>
                 <Modal.Body>
-                    <Table>
-                        <Table.Head>
-                            <Table.HeadCell>User</Table.HeadCell>
-                            <Table.HeadCell>Status</Table.HeadCell>
-                            <Table.HeadCell>Time</Table.HeadCell>
-                            <Table.HeadCell>Test Case</Table.HeadCell>
-                            <Table.HeadCell>Actions</Table.HeadCell>
-                        </Table.Head>
-                        <Table.Body>
-                            {selectedProblemSubmissions.map((submission) => (
-                                <Table.Row key={submission._id} className={submission.status === "Accepted" ? 'bg-green-100' : 'bg-red-100'}>
-                                    <Table.Cell>{submission.user.username}</Table.Cell>
-                                    <Table.Cell>{submission.status === "Accepted" ? 'Accepted' : 'Wrong Answer'}</Table.Cell>
-                                    <Table.Cell>{new Date(submission.time).toLocaleString()}</Table.Cell>
-                                    <Table.Cell>{submission.failedTestcase !== null ? submission.failedTestcase : 'N/A'}</Table.Cell>
-                                    <Table.Cell>
-                                        <Button onClick={() => handleSubmissionClick(submission)}>
-                                            View Code
-                                        </Button>
-                                    </Table.Cell>
-                                </Table.Row>
-                            ))}
-                        </Table.Body>
-                    </Table>
+                    <DataTable
+                        value={selectedProblemSubmissions}
+                        paginator
+                        rows={10}
+                        dataKey="_id"
+                        loading={isLoading}
+                        emptyMessage="No submissions found."
+                        className="p-datatable-custom"
+                    >
+                        <Column field="user.username" header="User" style={{ minWidth: '12rem' }} />
+                        <Column field="status" header="Status" body={(rowData) => rowData.status === "Accepted" ? 'Accepted' : 'Wrong Answer'} style={{ minWidth: '12rem' }} />
+                        <Column field="time" header="Time" body={(rowData) => new Date(rowData.time).toLocaleString()} style={{ minWidth: '12rem' }} />
+                        <Column field="failedTestcase" header="Test Case" body={(rowData) => rowData.failedTestcase !== null ? rowData.failedTestcase : 'N/A'} style={{ minWidth: '12rem' }} />
+                        <Column header="Actions" body={(rowData) => (
+                            <Button onClick={() => handleSubmissionClick(rowData)}>
+                                View Code
+                            </Button>
+                        )} style={{ minWidth: '12rem' }} />
+                    </DataTable>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button onClick={() => setIsModalOpen(false)}>Close</Button>

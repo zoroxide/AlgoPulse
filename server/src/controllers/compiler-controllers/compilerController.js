@@ -84,6 +84,8 @@ module.exports = {
         await user.save();
       }
 
+      console.log(user.score);
+
       // Save submission
       const newSubmission = new Submission({
         user: userID,
@@ -181,11 +183,13 @@ module.exports = {
       // Update user score and solved problems
       if (allPassed) {
         user.solved_problems.push(problemID);
-        if (problem.difficulty === "easy") user.score += 1;
-        else if (problem.difficulty === "medium") user.score += 2;
-        else if (problem.difficulty === "hard") user.score += 3;
+        if (problem.difficulty === "easy") user.score += 3;
+        else if (problem.difficulty === "medium") user.score += 5;
+        else if (problem.difficulty === "hard") user.score += 7;
         await user.save();
       }
+
+      console.log(user.score);
 
       // Save submission
       const newSubmission = new Submission({

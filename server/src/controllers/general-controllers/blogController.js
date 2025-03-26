@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 
 exports.getAllBlogs = async (req, res) => {
     try {
-        const blogs = await Blog.find().populate('author', 'username');
+        const blogs = await Blog.find().populate('author', 'username avatar name');
         res.json(blogs);
     } catch (err) {
         res.status(500).json({ message: 'Failed to fetch blogs', error: err.message });
@@ -18,7 +18,7 @@ exports.getBlogById = async (req, res) => {
     }
 
     try {
-        const blog = await Blog.findById(id).populate('author', 'username');
+        const blog = await Blog.findById(id).populate('author', 'username avatar name');
         if (!blog) {
             return res.status(404).json({ message: 'Blog not found' });
         }

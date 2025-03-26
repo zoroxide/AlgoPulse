@@ -152,9 +152,9 @@ const Blogs = () => {
                 <div key={blog._id} className="mb-6 p-4 border rounded shadow">
                     <div className="flex items-center mb-4">
                         <img
-                            alt={`${blog.author.name} image`}
+                            alt={`${blog.author.username} avatar`}
                             src={blog.author.avatar}
-                            className="rounded-full h-8 w-8"
+                            className="rounded-full h-12 w-12 mr-2"
                         />
                         <div>
                             <h3 className="text-lg font-semibold">{blog.author.name}</h3>

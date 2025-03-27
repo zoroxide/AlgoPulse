@@ -36,6 +36,13 @@ const AdminSidebar = ({ onSelectTab }) => {
           </Sidebar.Item>
           <Sidebar.Item
             href="#"
+            icon={HiFlag}
+            onClick={() => onSelectTab("blogs")}
+          >
+            Blogs
+          </Sidebar.Item>
+          <Sidebar.Item
+            href="#"
             icon={HiUser}
             onClick={() => onSelectTab("users")}
           >
@@ -47,13 +54,6 @@ const AdminSidebar = ({ onSelectTab }) => {
             onClick={() => onSelectTab("moderators")}
           >
             Moderators
-          </Sidebar.Item>
-          <Sidebar.Item
-            href="#"
-            icon={HiFlag}
-            onClick={() => onSelectTab("blogs")}
-          >
-            Blogs
           </Sidebar.Item>
         </Sidebar.ItemGroup>
       </Sidebar.Items>

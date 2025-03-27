@@ -3,86 +3,89 @@ import { Chart } from 'primereact/chart';
 import axiosInstance from '../../utils/axiosInstance';
 
 const AdminDashboard = () => {
-    const [problemStats, setProblemStats] = useState({ easy: 0, medium: 0, hard: 0 });
+    const [lineChartData, setLineChartData] = useState(null);
+    const [lineChartOptions, setLineChartOptions] = useState(null);
 
     useEffect(() => {
-        const fetchProblemStats = async () => {
+        const fetchSubmissionsData = async () => {
             try {
-                const response = await axiosInstance.get('/problems/stats');
-                setProblemStats(response.data);
+                const response = await axiosInstance.get('/submissions');
+                const submissions = response.data;
+
+                // Group submissions by date and count them
+                const submissionsByDate = {};
+                submissions.forEach(submission => {
+                    const createdAt = new Date(submission.time);
+                    const date = `${createdAt.getFullYear()}-${String(createdAt.getMonth() + 1).padStart(2, '0')}-${String(createdAt.getDate()).padStart(2, '0')}`; // Format as "YYYY-MM-DD"
+
+                    if (!submissionsByDate[date]) {
+                        submissionsByDate[date] = 0;
+                    }
+                    submissionsByDate[date]++;
+                });
+
+                // Sort dates (timeline)
+                const sortedDates = Object.keys(submissionsByDate).sort();
+
+                // Prepare chart data
+                const data = sortedDates.map(date => submissionsByDate[date]);
+
+                setLineChartData({
+                    labels: sortedDates, // Timeline on the x-axis
+                    datasets: [
+                        {
+                            label: 'Submissions',
+                            data,
+                            fill: false,
+                            borderColor: '#42A5F5', // Blue color for the line
+                            tension: 0.4
+                        }
+                    ]
+                });
+
+                setLineChartOptions({
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Submissions Over Time'
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Timeline (Year-Month-Day)'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Number of Submissions'
+                            }
+                        }
+                    }
+                });
             } catch (error) {
-                console.error('Error fetching problem statistics:', error);
+                console.error('Error fetching submissions data:', error);
             }
         };
 
-        fetchProblemStats();
+        fetchSubmissionsData();
     }, []);
-
-    const lineChartData = {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-        datasets: [
-            {
-                label: 'Problems Solved',
-                data: [65, 59, 80, 81, 56, 55, 40],
-                fill: false,
-                borderColor: '#42A5F5',
-                tension: 0.4
-            },
-            {
-                label: 'Solved Sheets',
-                data: [28, 48, 40, 19, 86, 27, 90],
-                fill: false,
-                borderColor: '#FFA726',
-                tension: 0.4
-            }
-        ]
-    };
-
-    const lineChartOptions = {
-        responsive: true,
-        plugins: {
-            legend: {
-                position: 'top',
-            },
-            title: {
-                display: true,
-                text: 'Sales and Revenue'
-            }
-        }
-    };
-
-    const pieChartData = {
-        labels: ['Easy', 'Medium', 'Hard'],
-        datasets: [
-            {
-                data: [problemStats.easy, problemStats.medium, problemStats.hard],
-                backgroundColor: ['#42A5F5', '#66BB6A', '#FFA726'],
-                hoverBackgroundColor: ['#64B5F6', '#81C784', '#FFB74D']
-            }
-        ]
-    };
-
-    const pieChartOptions = {
-        responsive: true,
-        plugins: {
-            legend: {
-                position: 'top',
-            },
-            title: {
-                display: true,
-                text: 'Problem Difficulty Distribution'
-            }
-        }
-    };
 
     return (
         <div className="p-4">
             <h1 className="text-2xl font-bold mb-4">Admin Dashboard</h1>
             <div className="card mb-4">
-                <Chart type="line" data={lineChartData} options={lineChartOptions} />
-            </div>
-            <div className="card" style={{ width: '200px', height: '200px' }}>
-                <Chart type="pie" data={pieChartData} options={pieChartOptions} />
+                {lineChartData && lineChartOptions ? (
+                    <Chart type="line" data={lineChartData} options={lineChartOptions} />
+                ) : (
+                    <p>Loading chart...</p>
+                )}
             </div>
         </div>
     );

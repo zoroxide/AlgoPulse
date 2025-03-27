@@ -11,7 +11,7 @@ const UserTable = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState(null);
-  const { currentUser } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
 
   useEffect(() => {
     axiosInstance.get('users')
@@ -48,6 +48,17 @@ const UserTable = () => {
   };
 
   const handleEdit = (rowData) => {
+    // TODO: Ensure currentUser is defined
+    if (!user || !user._id) {
+      toast.error("Current user is not defined!");
+      return;
+    }
+    // Prevent promoting the current user
+    if (user._id === rowData._id) {
+      toast.error("You cannot promote yourself!");
+      return;
+    }
+    
     axiosInstance.put(`admin/user/make-admin/${rowData._id}`)
       .then(response => {
         toast.success("User promoted to admin successfully!");
@@ -60,6 +71,17 @@ const UserTable = () => {
   };
 
   const handleDelete = (rowData) => {
+    // TODO: Ensure currentUser is defined
+    if (!user || !user._id) {
+      toast.error("Current user is not defined!");
+      return;
+    }
+    // Prevent deleting the current user
+    if (user._id === rowData._id) {
+      toast.error("You cannot delete yourself!");
+      return;
+    }
+    
     axiosInstance.delete(`admin/user/delete/${rowData._id}`)
       .then(response => {
         toast.success("User panned successfully!");

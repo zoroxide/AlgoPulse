@@ -12,7 +12,7 @@ const ModeratorsTable = () => {
   const [moderators, setModerators] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState(null);
-  const { currentUser } = useContext(AuthContext); 
+  const { user } = useContext(AuthContext); 
 
   useEffect(() => {
     axiosInstance.get('/users')
@@ -49,28 +49,52 @@ const ModeratorsTable = () => {
   };
 
   const handleEdit = (rowData) => {
-    axiosInstance.put(`/user/make-admin/${rowData._id}`)
-      .then(response => {
-        toast.success("User demoted to normal user!");
-        setModerators(prevModerators => prevModerators.filter(user => user._id !== rowData._id));
-      })
-      .catch(error => {
-        toast.error("Error demoting user to normal user!");
-        console.error('Error demoting user to normal user:', error);
-      });
-  };
+    // Ensure currentUser is defined
+    if (!user || !user._id) {
+        toast.error("Current user is not defined!");
+        return;
+    }
 
-  const handleDelete = (rowData) => {
-    axiosInstance.put(`/user/pan/${rowData._id}`)
-      .then(response => {
-        toast.success("User panned successfully!");
-        setModerators(prevModerators => prevModerators.filter(user => user._id !== rowData._id));
-      })
-      .catch(error => {
-        toast.error("Error panning user!");
-        console.error('Error panning user:', error);
-      });
-  };
+    // Prevent demoting the current user
+    if (user._id === user._id) {
+        toast.error("You cannot demote yourself!");
+        return;
+    }
+
+    axiosInstance.put(`admin/user/make-admin/${rowData._id}`)
+        .then(response => {
+            toast.success("User demoted to normal user!");
+            setModerators(prevModerators => prevModerators.filter(user => user._id !== rowData._id));
+        })
+        .catch(error => {
+            toast.error("Error demoting user to normal user!");
+            console.error('Error demoting user to normal user:', error);
+        });
+};
+
+const handleDelete = (rowData) => {
+    // Ensure currentUser is defined
+    if (!user || !user._id) {
+        toast.error("Current user is not defined!");
+        return;
+    }
+
+    // Prevent deleting the current user
+    if (user._id === rowData._id) {
+        toast.error("You cannot delete yourself!");
+        return;
+    }
+
+    axiosInstance.put(`admin/user/pan/${rowData._id}`)
+        .then(response => {
+            toast.success("User panned successfully!");
+            setModerators(prevModerators => prevModerators.filter(user => user._id !== rowData._id));
+        })
+        .catch(error => {
+            toast.error("Error panning user!");
+            console.error('Error panning user:', error);
+        });
+};
 
   const header = (
     <div className="table-header">

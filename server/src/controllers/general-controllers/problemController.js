@@ -34,4 +34,15 @@ module.exports = {
       res.status(500).json({ message: 'Error fetching problem', error: err.message });
     }
   },
+
+  getProblemDetails : async (req, res) => {
+    const { problemIds } = req.body;
+
+    try {
+        const problems = await Problem.find({ _id: { $in: problemIds } });
+        res.json(problems);
+    } catch (err) {
+        res.status(500).json({ message: 'Failed to fetch problem details', error: err.message });
+    }
+  },
 };

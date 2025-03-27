@@ -3,10 +3,8 @@
 - - [ ] why the frontend system keep refreshes to the login navigating to a link in the app ???
 - Majors:
 - - [ ] fix editing modals in Admin Dashboard
-- - [ ] fix the current user appears in the moderators and users list in admin dashboard
 - Minors:
 - - [ ] Update the Monaco Editor Coloring issue in switching the language
-- - [ ] Add Custom Coloring for the ERROR status in the submission (gray)
 
 # Server (Backend)
 - Bugs: Nothing

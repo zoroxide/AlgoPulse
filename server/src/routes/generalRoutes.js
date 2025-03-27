@@ -24,6 +24,7 @@ router.get('/sheets/:id/problems', authenticate, sheetController.getSheetProblem
 router.get('/problems/stats', authenticate, problemController.getProblemStats);
 router.get('/problems', authenticate, problemController.getAllProblems);
 router.get('/problems/:id', authenticate, problemController.getProblemById);
+router.post('/problems/details', authenticate, problemController.getProblemDetails);
 
 // ==================== "Contests" Public Operations =================
 router.get('/contests', authenticate, contestController.getAllContests);

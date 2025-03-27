@@ -3,6 +3,7 @@ const router = express.Router();
 const submissionController = require('../controllers/submission-controllers/submissionController');
 const authenticate = require('../middlewares/authenticate');
 
+router.get('/', authenticate, submissionController.getAllSubmissions);
 router.get('/user/:userId',authenticate, submissionController.getUserSubmissions);
 router.get('/problem/:problemId', authenticate, submissionController.getProblemSubmissions);
 router.get('/sheet/:sheetId', authenticate, submissionController.getSheetSubmissions);

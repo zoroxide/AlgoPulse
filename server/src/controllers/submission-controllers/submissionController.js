@@ -4,6 +4,17 @@ const Sheet = require('../../models/Sheet');
 const Contest = require('../../models/Contest');
 
 module.exports = {
+  getAllSubmissions: async (req, res) => {
+    try {
+      const submissions = await Submission.find();
+      // console.log(submissions);
+      res.status(200).json(submissions);
+
+    } catch (err) {
+      res.status(500).json({ message: 'Error fetching submissions', error: err.message });
+      console.log(err);
+    }
+  },
   getUserSubmissions: async (req, res) => {
     const { userId } = req.params;
     try {

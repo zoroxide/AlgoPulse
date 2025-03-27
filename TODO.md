@@ -8,7 +8,8 @@
 
 # Server (Backend)
 - Bugs: Nothing
-- Majors: Nothing
+- Majors: 
+- - [] Fix Scoring and counting system
 - Minors: 
 - - [ ] Add and Test Custom Template Support
 - - [ ] Add and Test file Storage Support

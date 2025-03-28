@@ -13,16 +13,16 @@ module.exports = {
       if (!problem) {
         return res.status(404).json({ message: 'Problem not found' });
       }
-
+  
       // Check if user exists
       const user = await User.findById(userID);
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
       }
-
+  
       // Get test cases
       const testCases = problem.testcases;
-
+  
       // Execute test cases
       const results = await Promise.all(
         testCases.map(async (testCase) => {
@@ -33,7 +33,7 @@ module.exports = {
               headers: { 'Content-Type': 'application/json' }
             });
             const data = await response.json();
-
+  
             // Check if response contains output
             if (!data.output) {
               console.error("Compiler service response does not contain 'output':", data.error);
@@ -45,12 +45,11 @@ module.exports = {
                 status: "Error",
               };
             }
-
-            // Storing these data to Compare actual output with expected output in present
-            const actualOutput = data.output;
-            const expectedOutput = testCase.output;
-            // console.log(actualOutput, expectedOutput);
-
+  
+            // Trim outputs to avoid whitespace issues
+            const actualOutput = data.output.trim();
+            const expectedOutput = testCase.output.trim();
+  
             return {
               input: testCase.input,
               expectedOutput,
@@ -71,21 +70,25 @@ module.exports = {
           }
         })
       );
-
+  
       // Check if all test cases passed
       const allPassed = results.every(result => result.passed);
 
+      // console.log("All test cases passed:", allPassed);
+  
       // Update user score and solved problems
       if (allPassed) {
-        user.solved_problems.push(problemID);
-        if (problem.difficulty === "easy") user.score += 1;
-        else if (problem.difficulty === "medium") user.score += 2;
-        else if (problem.difficulty === "hard") user.score += 3;
-        await user.save();
+        if (!user.solved_problems.includes(problemID)) {
+          user.solved_problems.push(problemID);
+          if (problem.difficulty === "easy") user.score += 1;
+          else if (problem.difficulty === "medium") user.score += 2;
+          else if (problem.difficulty === "hard") user.score += 3;
+          await user.save(); // Save the updated user object with the new score
+        }
       }
-
-      console.log(user.score);
-
+  
+      // console.log("Updated user score:", user.score);
+  
       // Save submission
       const newSubmission = new Submission({
         user: userID,
@@ -96,13 +99,12 @@ module.exports = {
         failedTestcase: allPassed ? null : results.findIndex(result => !result.passed),
       });
       await newSubmission.save();
-
+  
       res.json({ results, allPassed });
     } catch (err) {
       res.status(500).json({ message: 'Error compiling code', error: err.message });
     }
   },
-
   compileContestCode: async (req, res) => {
     const { userID, problemID, contestID, code, language } = req.body;
     try {
@@ -111,22 +113,22 @@ module.exports = {
       if (!problem) {
         return res.status(404).json({ message: 'Problem not found' });
       }
-
+  
       // Check if user exists
       const user = await User.findById(userID);
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
       }
-
+  
       // Check if contest exists
       const contest = await Contest.findById(contestID);
       if (!contest) {
         return res.status(404).json({ message: 'Contest not found' });
       }
-
+  
       // Get test cases
       const testCases = problem.testcases;
-
+  
       // Execute test cases
       const results = await Promise.all(
         testCases.map(async (testCase) => {
@@ -137,7 +139,7 @@ module.exports = {
               headers: { 'Content-Type': 'application/json' }
             });
             const data = await response.json();
-
+  
             // Check if response contains output
             if (!data.output) {
               console.error("Compiler service response does not contain 'output':", data.error);
@@ -149,12 +151,11 @@ module.exports = {
                 status: "Error",
               };
             }
-
-            // Storing these data to Compare actual output with expected output in present
-            const actualOutput = data.output;
-            const expectedOutput = testCase.output;
-            // console.log(actualOutput, expectedOutput);
-
+  
+            // Trim outputs to avoid whitespace issues
+            const actualOutput = data.output.trim();
+            const expectedOutput = testCase.output.trim();
+  
             return {
               input: testCase.input,
               expectedOutput,
@@ -175,40 +176,43 @@ module.exports = {
           }
         })
       );
-
+  
       // Check if all test cases passed
       const allPassed = results.every(result => result.passed);
-      const overallStatus = allPassed ? "Accepted" : results.some(result => result.status === "Error") ? "Error" : "Wrong Answer";
 
+      // console.log("All test cases passed:", allPassed);
+  
       // Update user score and solved problems
       if (allPassed) {
-        user.solved_problems.push(problemID);
-        if (problem.difficulty === "easy") user.score += 3;
-        else if (problem.difficulty === "medium") user.score += 5;
-        else if (problem.difficulty === "hard") user.score += 7;
-        await user.save();
+        if (!user.solved_problems.includes(problemID)) {
+          user.solved_problems.push(problemID);
+          if (problem.difficulty === "easy") user.score += 3;
+          else if (problem.difficulty === "medium") user.score += 5;
+          else if (problem.difficulty === "hard") user.score += 7;
+          await user.save(); // Save the updated user object
+        }
       }
-
-      console.log(user.score);
-
+  
+      // console.log("Updated user score:", user.score);
+  
       // Save submission
       const newSubmission = new Submission({
         user: userID,
         problem: problemID,
         time: Date.now(),
         code,
-        status: overallStatus,
+        status: allPassed ? "Accepted" : "Wrong Answer",
         failedTestcase: allPassed ? null : results.findIndex(result => !result.passed),
       });
       await newSubmission.save();
-
+  
       // Add submission to contest
       contest.submissions.push(newSubmission._id);
       await contest.save();
-
-      res.json({ status: overallStatus });
+  
+      res.json({ status: allPassed ? "Accepted" : "Wrong Answer" });
     } catch (err) {
       res.status(500).json({ message: 'Error compiling code', error: err.message });
     }
-  }
+  },
 };

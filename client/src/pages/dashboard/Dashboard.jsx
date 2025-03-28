@@ -206,7 +206,7 @@ const Dashboard = () => {
                 value={selectedSubmission.code}
                 options={{ readOnly: true }}
               />
-              <p><strong>Failed Testcase:</strong> {selectedSubmission.failedTestcase !== null ? selectedSubmission.failedTestcase : 'N/A'}</p>
+              <p><strong>Failed Testcase:</strong> {selectedSubmission.failedTestcase !== null ? (selectedSubmission.failedTestcase + 1) : 'N/A'}</p>
             </div>
           ) : (
             <div className="space-y-6">

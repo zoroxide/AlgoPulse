@@ -1,0 +1,46 @@
+.users-table-container {
+    padding: 1rem;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .p-datatable-custom {
+    width: 100%;
+    border: none;
+  }
+  
+  .p-datatable-custom .p-datatable-header {
+    background-color: #333;
+    color: #fff;
+    font-size: 1.25rem;
+    padding: 1rem;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+  }
+  
+  .p-datatable-custom .p-datatable-thead > tr > th {
+    background-color: #333;
+    color: #fff;
+    text-align: left;
+    padding: 0.75rem;
+  }
+  
+  .p-datatable-custom .p-datatable-tbody > tr > td {
+    padding: 0.75rem;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .p-datatable-custom .p-paginator {
+    background-color: #f9f9f9;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    padding: 1rem;
+  }
+  
+  @media (max-width: 768px) {
+    .p-datatable-custom .p-datatable-thead > tr > th,
+    .p-datatable-custom .p-datatable-tbody > tr > td {
+      padding: 0.5rem;
+    }
+  }

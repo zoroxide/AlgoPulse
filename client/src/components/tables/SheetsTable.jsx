@@ -4,7 +4,7 @@ import { Column } from "primereact/column";
 import { Button } from "flowbite-react";
 import { useNavigate } from 'react-router-dom';
 import './UserTable.css';
-import EditModal from './EditModal';
+import SheetModals from '../modals/SheetModals';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axiosInstance from '../../utils/axiosInstance';
@@ -12,9 +12,6 @@ import axiosInstance from '../../utils/axiosInstance';
 const SheetsTable = () => {
   const [sheets, setSheets] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [filters, setFilters] = useState(null);
-  const [selectedSheet, setSelectedSheet] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -37,6 +34,22 @@ const SheetsTable = () => {
       });
   }, []);
 
+  const handleEdit = (rowData) => {
+    navigate(`/admin/edit-sheet/${rowData._id}`); // Navigate to the EditSheet page
+  };
+
+  const handleDelete = (rowData) => {
+    axiosInstance.delete(`/admin/sheet/delete/${rowData._id}`)
+      .then(response => {
+        toast.success("Sheet deleted successfully!");
+        setSheets(sheets.filter(sheet => sheet._id !== rowData._id));
+      })
+      .catch(error => {
+        toast.error("Error deleting sheet!");
+        console.error('Error deleting sheet:', error);
+      });
+  };
+
   const optionsBodyTemplate = (rowData) => {
     return (
       <div className="flex space-x-2">
@@ -48,37 +61,6 @@ const SheetsTable = () => {
         </Button>
       </div>
     );
-  };
-
-  const handleEdit = (rowData) => {
-    setSelectedSheet(rowData);
-    setIsModalOpen(true);
-  };
-
-  const handleDelete = (rowData) => {
-    axiosInstance.delete(`/admin/sheet/delete/${rowData._id}`)
-      .then(response => {
-        toast.success("Sheet deleted successfully!");
-        console.log("Sheet deleted: ", response.data);
-        setSheets(sheets.filter(sheet => sheet._id !== rowData._id));
-      })
-      .catch(error => {
-        toast.error("Error deleting sheet!");
-        console.error('Error deleting sheet:', error);
-      });
-  };
-
-  const handleSave = (updatedSheet) => {
-    axiosInstance.put(`/admin/sheet/edit/${updatedSheet._id}`, updatedSheet)
-      .then(response => {
-        toast.success("Sheet updated successfully!");
-        setSheets(sheets.map(sheet => sheet._id === updatedSheet._id ? updatedSheet : sheet));
-        setIsModalOpen(false);
-      })
-      .catch(error => {
-        toast.error("Error updating sheet!");
-        console.error('Error updating sheet:', error);
-      });
   };
 
   const header = (
@@ -98,7 +80,6 @@ const SheetsTable = () => {
         paginator 
         rows={10} 
         dataKey="id" 
-        filters={filters}
         loading={loading}
         globalFilterFields={['name', 'imageLink', 'difficulty']} 
         header={header} 
@@ -110,14 +91,6 @@ const SheetsTable = () => {
         <Column field="difficulty" header="Difficulty" filter filterPlaceholder="Search by difficulty" style={{ minWidth: '12rem' }} />
         <Column header="Options" body={optionsBodyTemplate} style={{ minWidth: '10rem' }} />
       </DataTable>
-      {selectedSheet && (
-        <EditModal
-          show={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          data={selectedSheet}
-          onSave={handleSave}
-        />
-      )}
     </div>
   );
 };

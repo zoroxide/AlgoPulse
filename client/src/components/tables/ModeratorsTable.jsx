@@ -4,6 +4,7 @@ import { Column } from "primereact/column";
 import { Button } from "flowbite-react";
 import { AuthContext } from '../../context/AuthContext';
 import { ToastContainer, toast } from 'react-toastify';
+import ModeratorsModals from '../modals/ModeratorsModals';
 import 'react-toastify/dist/ReactToastify.css';
 import axiosInstance from '../../utils/axiosInstance';
 import './UserTable.css';

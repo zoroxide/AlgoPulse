@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './UserTable.css';
-import EditModal from './EditModal';
+import ContestModals from "../modals/ContestsModals";
 import axiosInstance from '../../utils/axiosInstance'; 
 
 const ContestTable = () => {
@@ -112,7 +112,7 @@ const ContestTable = () => {
                 <Column header="Options" body={optionsBodyTemplate} style={{ minWidth: '10rem' }} />
             </DataTable>
             {selectedContest && (
-                <EditModal
+                <ContestModals
                     show={isModalOpen}
                     onClose={() => setIsModalOpen(false)}
                     data={selectedContest}

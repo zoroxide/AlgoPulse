@@ -4,7 +4,7 @@ import { Column } from "primereact/column";
 import { Button } from "flowbite-react";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
-import EditModal from "./EditModal";
+import BlogModals from "../modals/BlogModals";
 import "react-toastify/dist/ReactToastify.css";
 import axiosInstance from "../../utils/axiosInstance";
 import "./UserTable.css";
@@ -140,7 +140,7 @@ const BlogsTable = () => {
         <Column
           field="upvotedBy"
           header="Upvotes"
-          body={(rowData) => rowData.upvotedBy.length} // Display the count of upvotes
+          body={(rowData) => rowData.upvotedBy.length}
           filter
           filterPlaceholder="Search by upvotes"
           style={{ minWidth: "12rem" }}
@@ -148,7 +148,7 @@ const BlogsTable = () => {
         <Column
           field="downvotedBy"
           header="Downvotes"
-          body={(rowData) => rowData.downvotedBy.length} // Display the count of downvotes
+          body={(rowData) => rowData.downvotedBy.length}
           filter
           filterPlaceholder="Search by downvotes"
           style={{ minWidth: "12rem" }}
@@ -160,7 +160,7 @@ const BlogsTable = () => {
         />
       </DataTable>
       {selectedBlog && (
-        <EditModal
+        <BlogModals
           show={isModalOpen}
           onClose={() => setIsModalOpen(false)}
           data={selectedBlog}

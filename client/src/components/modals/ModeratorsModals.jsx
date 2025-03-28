@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Modal, Button, TextInput } from 'flowbite-react';
 import { toast } from 'react-toastify';
 
-const EditModal = ({ show, onClose, data, onSave }) => {
+const ModeratorsModals = ({ show, onClose, data, onSave }) => {
   const [formData, setFormData] = useState(data);
 
   useEffect(() => {
@@ -42,4 +42,4 @@ const EditModal = ({ show, onClose, data, onSave }) => {
   );
 };
 
-export default EditModal;
+export default ModeratorsModals;

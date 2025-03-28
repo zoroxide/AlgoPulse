@@ -45,8 +45,8 @@ const SetEditor = ({ problem }) => {
         input: testCase.input,
       });
   
-      const actualOutput = response.data.output;
-      const expectedOutput = testCase.output;
+      const actualOutput = response.data.output.trim();
+      const expectedOutput = testCase.output.trim();
   
       setTestResults([
         {

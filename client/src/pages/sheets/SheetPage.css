@@ -1,0 +1,4 @@
+.p-datatable-custom .p-datatable-tbody > tr:hover {
+    background-color: #b5b5b5; /* abseloute shit */ 
+    cursor: pointer;
+}

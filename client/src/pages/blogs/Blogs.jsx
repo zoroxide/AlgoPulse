@@ -46,14 +46,13 @@ const Blogs = () => {
         if (blog.userVote === 'upvote') {
             // Remove upvote
             try {
-                await axiosInstance.post(`/blogs/${blogId}/remove-vote`, { userId: user._id });
+                await axiosInstance.post(`/blogs/${blogId}/downvote`, { userId: user._id });
                 setBlogs(blogs.map(blog => blog._id === blogId ? { ...blog, upvotes: blog.upvotes - 1, userVote: null } : blog));
                 toast.success('Upvote removed');
             } catch (err) {
                 toast.error('Failed to remove upvote');
             }
         } else {
-            // Add upvote
             try {
                 await axiosInstance.post(`/blogs/${blogId}/upvote`, { userId: user._id });
                 setBlogs(blogs.map(blog => blog._id === blogId ? { ...blog, upvotes: blog.upvotes + 1, downvotes: blog.userVote === 'downvote' ? blog.downvotes - 1 : blog.downvotes, userVote: 'upvote' } : blog));

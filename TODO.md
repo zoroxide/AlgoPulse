@@ -2,9 +2,10 @@
 - Bugs:
 - - [ ] why the frontend system keep refreshes to the login navigating to a link in the app ???
 - Majors:
-- - [ ] fix editing modals in Admin Dashboard
+- - [ ] add and test contest editing page like the sheet one
 - Minors:
-- - [ ] Update the Monaco Editor Coloring issue in switching the language
+- - [ ] add achevments bar in the sheet page and also update the problems table status 
+- - [ ] Update the Monaco Editor Coloring issue in python and c sharp switching the language
 
 # Server (Backend)
 - Bugs: Nothing
@@ -14,10 +15,9 @@
 - - [ ] Add and Test Custom Template Support
 - - [ ] Add and Test file Storage Support
 - - [ ] transform the admin to Multi-Role to customize permessions (lead - head - moderator)
-- - [ ] Refactor Codebase to real MVC
 
 # Code Execution System (Micro Service)
-- Majors: Nothing
 - Bugs: Nothing
+- Majors: Nothing
 - Minors:
 - - [ ] add time limit support

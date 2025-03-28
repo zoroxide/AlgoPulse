@@ -4,6 +4,7 @@ import { Column } from "primereact/column";
 import { Button } from "flowbite-react";
 import { AuthContext } from '../../context/AuthContext';
 import './UserTable.css';
+import UserModals from '../modals/UserModals';
 import { toast, ToastContainer } from 'react-toastify';
 import axiosInstance from '../../utils/axiosInstance';
 
@@ -48,7 +49,7 @@ const UserTable = () => {
   };
 
   const handleEdit = (rowData) => {
-    // TODO: Ensure currentUser is defined
+    // Ensure current user is defined
     if (!user || !user._id) {
       toast.error("Current user is not defined!");
       return;
@@ -71,7 +72,7 @@ const UserTable = () => {
   };
 
   const handleDelete = (rowData) => {
-    // TODO: Ensure currentUser is defined
+    // Ensuring current user is defined
     if (!user || !user._id) {
       toast.error("Current user is not defined!");
       return;

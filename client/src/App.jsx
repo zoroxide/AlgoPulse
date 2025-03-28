@@ -19,6 +19,7 @@ import ProblemSetWorkspace from "./pages/workspace/ProblemSetWorkspace";
 import ProtectedRoute from "./utils/ProtectedRoute";
 import Blogs from "./pages/blogs/Blogs";
 import AddBlog from "./pages/admin/AddBlog";
+import EditSheet from "./pages/admin/EditSheet";
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
@@ -35,19 +36,21 @@ function App() {
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
+            <Route path="/blogs" element={<ProtectedRoute><Blogs /></ProtectedRoute>} />
+            <Route path="/sheets" element={<ProtectedRoute><Sheets /></ProtectedRoute>} />
             <Route path="/sheets/:sheetId" element={<ProtectedRoute><SheetPage /></ProtectedRoute>} />
+            <Route path="/contests" element={<ProtectedRoute><Contests /></ProtectedRoute>} />
             <Route path="/contest/:contestId" element={<ProtectedRoute><ContestPage /></ProtectedRoute>} />
             <Route path="/contest/:contestId/problem/:problemId" element={<ProtectedRoute><ContestWorkspace /></ProtectedRoute>} />
-            <Route path="/blogs" element={<ProtectedRoute><Blogs /></ProtectedRoute>} />
             <Route path="/problems" element={<ProtectedRoute><ProblemSet /></ProtectedRoute>} />
             <Route path="/problem/:problemId" element={<ProtectedRoute><ProblemSetWorkspace /></ProtectedRoute>} />
-            <Route path="/sheets" element={<ProtectedRoute><Sheets /></ProtectedRoute>} />
-            <Route path="/contests" element={<ProtectedRoute><Contests /></ProtectedRoute>} />
+
             <Route path="/admin" element={<ProtectedRoute adminOnly={true}><Panel /></ProtectedRoute>} />
             <Route path="/admin/create-sheet" element={<ProtectedRoute adminOnly={true}><AddSheet /></ProtectedRoute>} />
             <Route path="/admin/create-problem" element={<ProtectedRoute adminOnly={true}><AddProblem /></ProtectedRoute>} />
             <Route path="/admin/create-contest" element={<ProtectedRoute adminOnly={true}><AddContest /></ProtectedRoute>} />
             <Route path="/admin/create-blog" element={<ProtectedRoute adminOnly={true}><AddBlog /></ProtectedRoute>} />
+            <Route path="/admin/edit-sheet/:sheetId" element={<ProtectedRoute adminOnly={true}><EditSheet /></ProtectedRoute>} />
             
           </Routes>
         </div>

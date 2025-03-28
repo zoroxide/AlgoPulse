@@ -4,7 +4,7 @@ import { Column } from "primereact/column";
 import { Button } from "flowbite-react";
 import { useNavigate } from 'react-router-dom';
 import './UserTable.css';
-import EditModal from './EditModal';
+import ProblemsModals from '../modals/ProblemsModals';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axiosInstance from '../../utils/axiosInstance';
@@ -109,7 +109,7 @@ const ProblemsTable = () => {
         <Column header="Options" body={optionsBodyTemplate} style={{ minWidth: '10rem' }} />
       </DataTable>
       {selectedProblem && (
-        <EditModal
+        <ProblemsModals
           show={isModalOpen}
           onClose={() => setIsModalOpen(false)}
           data={selectedProblem}

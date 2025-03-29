@@ -8,7 +8,7 @@ import templates from "../../templates.json";
 import axios from "axios";
 import axiosInstance from "../../utils/axiosInstance";
 import { Modal } from "flowbite-react";
-import { AuthContext } from '../../context/AuthContext';
+import { AuthContext } from "../../context/AuthContext";
 
 const SetEditor = ({ problem }) => {
   const { user } = useContext(AuthContext);
@@ -18,6 +18,16 @@ const SetEditor = ({ problem }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [testResults, setTestResults] = useState([]);
   const [openModal, setOpenModal] = useState(false);
+
+  const languageMap = {
+    cpp: "cpp",
+    java: "java",
+    py: "python",
+    c: "c",
+    go: "go",
+    cs: "csharp",
+    js: "javascript",
+  };
 
   const handleThemeToggle = () => {
     setTheme(theme === "vs-dark" ? "vs-light" : "vs-dark");
@@ -33,10 +43,10 @@ const SetEditor = ({ problem }) => {
       toast.error("No test cases available for this problem.");
       return;
     }
-  
+
     setIsLoading(true);
     setOpenModal(true);
-  
+
     try {
       const testCase = problem.testcases[0];
       const response = await axios.post("http://localhost:8080/", {
@@ -44,10 +54,10 @@ const SetEditor = ({ problem }) => {
         language,
         input: testCase.input,
       });
-  
+
       const actualOutput = response.data.output.trim();
       const expectedOutput = testCase.output.trim();
-  
+
       setTestResults([
         {
           input: testCase.input,
@@ -99,12 +109,14 @@ const SetEditor = ({ problem }) => {
       setTestResults(results);
     } catch (error) {
       console.error("Error running all test cases:", error);
-      setTestResults(problem.testcases.map((testCase) => ({
-        input: testCase.input,
-        expectedOutput: testCase.output,
-        actualOutput: "Error during execution",
-        passed: false,
-      })));
+      setTestResults(
+        problem.testcases.map((testCase) => ({
+          input: testCase.input,
+          expectedOutput: testCase.output,
+          actualOutput: "Error during execution",
+          passed: false,
+        }))
+      );
     } finally {
       setIsLoading(false);
     }
@@ -131,10 +143,10 @@ const SetEditor = ({ problem }) => {
         </Button>
       </div>
 
-      {/* Monaco Editor */}
+      {/* Code Editor */}
       <MonacoEditor
         height="90%"
-        language={language}
+        language={languageMap[language]}
         theme={theme}
         value={code}
         onChange={(newValue) => setCode(newValue)}
@@ -142,10 +154,26 @@ const SetEditor = ({ problem }) => {
 
       {/* Run Buttons */}
       <div className="flex justify-end gap-2 p-2 bg-gray-800 text-white">
-        <Button onClick={handleRunFirstTestCase} color="dark" size="md" disabled={isLoading}>
-          {isLoading ? "Running..." : <><FaPlay className="mr-2" /> Run</>}
+        <Button
+          onClick={handleRunFirstTestCase}
+          color="dark"
+          size="md"
+          disabled={isLoading}
+        >
+          {isLoading ? (
+            "Running..."
+          ) : (
+            <>
+              <FaPlay className="mr-2" /> Run
+            </>
+          )}
         </Button>
-        <Button onClick={handleRunAllTestCases} color="green" size="md" disabled={isLoading}>
+        <Button
+          onClick={handleRunAllTestCases}
+          color="green"
+          size="md"
+          disabled={isLoading}
+        >
           {isLoading ? "Submitting..." : "Submit"}
         </Button>
       </div>
@@ -162,11 +190,21 @@ const SetEditor = ({ problem }) => {
             <div className="space-y-6">
               {testResults.map((result, index) => (
                 <div key={index} className="p-2 border-b">
-                  <p className="text-sm text-gray-700">Test Case {index + 1}:</p>
+                  <p className="text-sm text-gray-700">
+                    Test Case {index + 1}:
+                  </p>
                   <p className="text-sm text-gray-500">Input: {result.input}</p>
-                  <p className="text-sm text-gray-500">Expected Output: {result.expectedOutput}</p>
-                  <p className="text-sm text-gray-500">Actual Output: {result.actualOutput}</p>
-                  <p className={`text-sm font-bold ${result.passed ? "text-green-600" : "text-red-600"}`}>
+                  <p className="text-sm text-gray-500">
+                    Expected Output: {result.expectedOutput}
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    Actual Output: {result.actualOutput}
+                  </p>
+                  <p
+                    className={`text-sm font-bold ${
+                      result.passed ? "text-green-600" : "text-red-600"
+                    }`}
+                  >
                     {result.passed ? "Passed" : "Failed"}
                   </p>
                 </div>

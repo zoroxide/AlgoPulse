@@ -1,11 +1,11 @@
 # Client (front end)
 - Bugs:
 - - [ ] why the frontend system keep refreshes to the login navigating to a link in the app ???
+- - [ ] fix sheets and contest editing page
 - Majors:
-- - [ ] add and test contest editing page like the sheet one
+- - [ ] Implement user editing modal in dashboard
+- - [ ] Update the Monaco Editor Coloring issue in python and c sharp and js switching the language
 - Minors:
-- - [ ] add achevments bar in the sheet page and also update the problems table status 
-- - [ ] Update the Monaco Editor Coloring issue in python and c sharp switching the language
 
 # Server (Backend)
 - Bugs: Nothing

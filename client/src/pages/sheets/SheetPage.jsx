@@ -6,6 +6,7 @@ import { Spinner, Alert, Button, Modal, Table } from "flowbite-react";
 import axiosInstance from "../../utils/axiosInstance";
 import { AuthContext } from "../../context/AuthContext";
 import MonacoEditor from "@monaco-editor/react";
+import AchievementsBar from "../../components/achievements-bar/AchievementsBar";
 import "./SheetPage.css";
 
 const SheetPage = () => {
@@ -16,8 +17,8 @@ const SheetPage = () => {
   const [problems, setProblems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [submissions, setSubmissions] = useState([]);
-  const [isAllSubmissionsModalOpen, setIsAllSubmissionsModalOpen] =
-    useState(false);
+  const [solvedCount, setSolvedCount] = useState(0);
+  const [isAllSubmissionsModalOpen, setIsAllSubmissionsModalOpen] = useState(false);
   const [allSubmissions, setAllSubmissions] = useState([]);
   const [selectedProblemSubmissions, setSelectedProblemSubmissions] = useState(
     []
@@ -31,13 +32,19 @@ const SheetPage = () => {
       try {
         const response = await axiosInstance.get(`/sheets/${sheetId}/problems`);
         setProblems(response.data);
+  
+        const solvedCount = user?.solved_problems?.filter((problemId) =>
+          response.data.some((problem) => problem._id === problemId)
+        ).length;
+  
+        setSolvedCount(solvedCount);
       } catch (error) {
         console.error("Error fetching problems:", error);
       } finally {
         setLoading(false);
       }
     };
-
+  
     const fetchUserSubmissions = async () => {
       try {
         const response = await axiosInstance.get(
@@ -48,7 +55,7 @@ const SheetPage = () => {
         console.error("Error fetching user submissions:", error);
       }
     };
-
+  
     fetchProblems();
     if (user) {
       fetchUserSubmissions();
@@ -67,21 +74,6 @@ const SheetPage = () => {
       </span>
     );
   };
-
-//   const submissionStatusTemplate = (rowData) => {
-//     const userSubmissions = submissions.filter(
-//       (sub) => sub.problem._id === rowData._id
-//     );
-//     if (userSubmissions.length > 0) {
-//       const lastSubmission = userSubmissions[userSubmissions.length - 1];
-//       return lastSubmission.status === "Accepted" ? (
-//         <span className="text-green-600">Accepted ✔</span>
-//       ) : (
-//         <span className="text-red-600">Rejected ✘</span>
-//       );
-//     }
-//     return <span className="text-gray-600">No submissions made</span>;
-//   };
 
   const rowClassName = (rowData) => {
     const userSubmissions = submissions.filter(
@@ -149,6 +141,10 @@ const SheetPage = () => {
   return (
     <div className="container mx-auto p-6">
       <h1 className="text-3xl font-semibold mb-6">Sheet Problems</h1>
+
+      {/* Achievements Bar */}
+      <AchievementsBar solvedCount={solvedCount} totalProblems={problems.length} />
+
       <div className="problems-table-container p-6">
         <DataTable
           value={problems}

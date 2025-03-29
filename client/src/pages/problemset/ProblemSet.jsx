@@ -6,6 +6,7 @@ import { Button, Spinner, Alert, Modal, Table } from "flowbite-react";
 import axiosInstance from "../../utils/axiosInstance";
 import { AuthContext } from "../../context/AuthContext";
 import MonacoEditor from "@monaco-editor/react";
+import AchievementsBar from "../../components/achievements-bar/AchievementsBar";
 import "./problemSet.css";
 
 const ProblemSet = () => {
@@ -19,6 +20,7 @@ const ProblemSet = () => {
   const [selectedSubmission, setSelectedSubmission] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmissionModalOpen, setIsSubmissionModalOpen] = useState(false);
+  const [solvedCount, setSolvedCount] = useState(0);
   const [isAllSubmissionsModalOpen, setIsAllSubmissionsModalOpen] =
     useState(false);
   const [allSubmissions, setAllSubmissions] = useState([]);
@@ -29,6 +31,12 @@ const ProblemSet = () => {
       try {
         const response = await axiosInstance.get("/problems");
         setProblems(response.data);
+
+        const solvedCount = user?.solved_problems?.filter((problemId) =>
+          response.data.some((problem) => problem._id === problemId)
+        ).length;
+
+        setSolvedCount(solvedCount);
       } catch (error) {
         console.error("Error fetching problems:", error);
       } finally {
@@ -140,8 +148,10 @@ const ProblemSet = () => {
 
   return (
     <>
-      <h1 className="text-3xl font-semibold mb-6">Problem Set</h1>
       <div className="problems-table-container p-6">
+      <h1 className="text-3xl font-semibold mb-6">Problem Set</h1>
+        {/* Achievements Bar */}
+        <AchievementsBar solvedCount={solvedCount} totalProblems={problems.length} />
         <DataTable
           value={problems}
           paginator

@@ -8,17 +8,18 @@ import { MdDashboard } from "react-icons/md";
 import axiosInstance from '../../utils/axiosInstance';
 import { AuthContext } from '../../context/AuthContext';
 import MonacoEditor from '@monaco-editor/react';
+import AchievementsBar from '../../components/achievements-bar/AchievementsBar';
 import '../../components/tables/UserTable.css';
 
 const ContestPage = () => {
     const { user } = useContext(AuthContext);
     const { contestId } = useParams();
     const navigate = useNavigate();
-
     const [contest, setContest] = useState(null);
     const [problems, setProblems] = useState([]);
     const [leaderboard, setLeaderboard] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [solvedCount, setSolvedCount] = useState(0);
     const [error, setError] = useState(null);
     const [submissions, setSubmissions] = useState([]);
     const [selectedProblemSubmissions, setSelectedProblemSubmissions] = useState([]);
@@ -45,6 +46,12 @@ const ContestPage = () => {
             try {
                 const response = await axiosInstance.get(`/contests/${contestId}/problems`);
                 setProblems(response.data);
+
+                const solvedCount = user?.solved_problems?.filter((problemId) =>
+                    response.data.some((problem) => problem._id === problemId)
+                ).length;
+            
+                setSolvedCount(solvedCount);
             } catch (err) {
                 setError('Failed to load the contest problems. Please try again later.');
                 console.error('Error fetching contest problems:', err);
@@ -200,7 +207,11 @@ const ContestPage = () => {
 
     return (
         <div className="container mx-auto p-6">
+            <h1 className="text-3xl font-semibold mb-6">{contest?.name}</h1>
             <p className="text-lg mb-6">Time left: {timeLeft}</p>
+
+            {/* Achievements Bar */}
+            <AchievementsBar solvedCount={solvedCount} totalProblems={problems.length} />
 
             <Tabs aria-label="Tabs with underline" variant="underline">
                 <Tabs.Item active title="Problems" icon={HiClipboardList}>

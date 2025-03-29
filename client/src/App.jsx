@@ -20,6 +20,7 @@ import ProtectedRoute from "./utils/ProtectedRoute";
 import Blogs from "./pages/blogs/Blogs";
 import AddBlog from "./pages/admin/AddBlog";
 import EditSheet from "./pages/admin/EditSheet";
+import EditContest from "./pages/admin/EditContest";
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
@@ -51,6 +52,7 @@ function App() {
             <Route path="/admin/create-contest" element={<ProtectedRoute adminOnly={true}><AddContest /></ProtectedRoute>} />
             <Route path="/admin/create-blog" element={<ProtectedRoute adminOnly={true}><AddBlog /></ProtectedRoute>} />
             <Route path="/admin/edit-sheet/:sheetId" element={<ProtectedRoute adminOnly={true}><EditSheet /></ProtectedRoute>} />
+            <Route path="/admin/edit-contest/:contestId" element={<ProtectedRoute adminOnly={true}><EditContest /></ProtectedRoute>} />
             
           </Routes>
         </div>

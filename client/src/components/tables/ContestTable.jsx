@@ -40,7 +40,7 @@ const ContestTable = () => {
     const optionsBodyTemplate = (rowData) => {
         return (
             <div className="flex space-x-2">
-                <Button color="info" size="xs" onClick={() => handleEdit(rowData)}>
+                <Button color="info" size="xs" onClick={() => navigate(`/admin/edit-contest/${rowData._id}`)}>
                     Edit
                 </Button>
                 <Button color="failure" size="xs" onClick={() => handleDelete(rowData)}>

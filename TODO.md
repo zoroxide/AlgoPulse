@@ -4,7 +4,6 @@
 - - [ ] fix sheets and contest editing page
 - Majors:
 - - [ ] Implement user editing modal in dashboard
-- - [ ] Update the Monaco Editor Coloring issue in python and c sharp and js switching the language
 - Minors:
 
 # Server (Backend)

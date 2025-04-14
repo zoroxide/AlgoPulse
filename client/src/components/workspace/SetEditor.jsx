@@ -49,7 +49,7 @@ const SetEditor = ({ problem }) => {
 
     try {
       const testCase = problem.testcases[0];
-      const response = await axios.post("http://localhost:8080/", {
+      const response = await axios.post(import.meta.env.VITE_CE_URL || 'http://localhost:8080', {
         code,
         language,
         input: testCase.input,

@@ -1,14 +1,14 @@
 const express = require('express');
 const cors = require('cors');
-const connectDB = require('./src/config/database');
+const connectDB = require('./config/database');
 const bodyParser = require('body-parser');
-const userRoutes = require('./src/routes/userRoutes');
-const adminRoutes = require('./src/routes/adminRoutes');
-const generalRoutes = require('./src/routes/generalRoutes');
-const errorHandler = require('./src/middlewares/errorHandler');
-const compilerRoutes = require('./src/routes/compilerRoutes');
-const submissionRoutes = require('./src/routes/submissionRoutes');
-const fightRoutes = require('./src/routes/fightRoutes');
+const userRoutes = require('./routes/userRoutes');
+const adminRoutes = require('./routes/adminRoutes');
+const generalRoutes = require('./routes/generalRoutes');
+const errorHandler = require('./middlewares/errorHandler');
+const compilerRoutes = require('./routes/compilerRoutes');
+const submissionRoutes = require('./routes/submissionRoutes');
+const fightRoutes = require('./routes/fightRoutes');
 
 require('dotenv').config();
 

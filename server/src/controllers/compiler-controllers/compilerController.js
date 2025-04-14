@@ -27,7 +27,7 @@ module.exports = {
       const results = await Promise.all(
         testCases.map(async (testCase) => {
           try {
-            const response = await fetch('http://localhost:8080/', {
+            const response = await fetch(`${process.env.CE_URL}`, {
               method: 'POST',
               body: JSON.stringify({ input: testCase.input, code, language }),
               headers: { 'Content-Type': 'application/json' }
@@ -133,7 +133,7 @@ module.exports = {
       const results = await Promise.all(
         testCases.map(async (testCase) => {
           try {
-            const response = await fetch('http://localhost:8080/', {
+            const response = await fetch(`${process.env.CE_URL}`, {
               method: 'POST',
               body: JSON.stringify({ input: testCase.input, code, language }),
               headers: { 'Content-Type': 'application/json' }

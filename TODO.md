@@ -16,8 +16,9 @@
 - Bugs: 
 - - [ ] fix Scoring and counting system
 - Majors:
-- - [ ] add CRUD Method admins to ignore submissions in contests and sheets
-- - [ ] Add Cache System (redis) !!
+- - [ ] Add and Test CRUD Method admins to ignore submissions in contests and sheets
+- - [ ] Add and Test Cache System (redis) !!
+- - [ ] Add and Test History Logging System
 - - [ ] Add and Test File Storage Support CDN
 - - [ ] Add and Test Custom Template Support
 - - [ ] transform the admin role to Multi-Role permissions -> (lead - head - moderator)

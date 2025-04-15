@@ -1,22 +1,32 @@
 # Client (front end)
 - Bugs:
 - - [ ] Why does the front-end system keep refreshing to the login navigating to a link in the app ???
+- - [ ] fix the contest editor in coloring issue in some languge and submiting
 - - [ ] fix sheets and contest editing page
 - Majors:
+- - [ ] add ability (admin page / buttons in problem tables) to admins to ignore submissions in contests and sheets
 - - [ ] Implement user editing modal in dashboard
 - Minors:
+- - [ ] better UI !!!
+- - [ ] sort the admin action in problem set
+
+
 
 # Server (Backend)
-- Bugs: Nothing
-- Majors: 
+- Bugs: 
 - - [ ] fix Scoring and counting system
-- Minors: 
+- Majors:
+- - [ ] add CRUD Method admins to ignore submissions in contests and sheets
+- - [ ] Add Cache System (redis) !!
+- - [ ] Add and Test File Storage Support CDN
 - - [ ] Add and Test Custom Template Support
-- - [ ] Add and Test File Storage Support
-- - [ ] transform the admin to Multi-Role to customize permissions (lead - head - moderator)
+- - [ ] transform the admin role to Multi-Role permissions -> (lead - head - moderator)
+- Minors: Nothing
+
 
 # Code Execution System (Micro Service)
 - Bugs: Nothing
 - Majors: Nothing
 - Minors:
+- - [ ] add dart and rust language support
 - - [ ] add time and memory limit and memory support

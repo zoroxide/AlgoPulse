@@ -17,6 +17,16 @@ const ContestEditor = ({ problem, contest}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [submissionStatus, setSubmissionStatus] = useState("");
 
+  const languageMap = {
+    cpp: "cpp",
+    java: "java",
+    py: "python",
+    c: "c",
+    go: "go",
+    cs: "csharp",
+    js: "javascript",
+  };
+
   const handleThemeToggle = () => {
     setTheme(theme === "vs-dark" ? "vs-light" : "vs-dark");
   };
@@ -81,7 +91,7 @@ const ContestEditor = ({ problem, contest}) => {
       {/* Monaco Editor */}
       <MonacoEditor
         height="90%"
-        language={language}
+        language={languageMap[language]}
         theme={theme}
         value={code}
         onChange={(newValue) => setCode(newValue)}

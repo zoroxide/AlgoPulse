@@ -62,8 +62,8 @@ export default function HomeCard({ title, content, link, contestId, isUpcoming, 
       {isUpcoming ? (
         <div className="font-normal text-gray-700 dark:text-gray-400">
           Contest will start at {startTime.toLocaleString()} and ends at {endTime.toLocaleString()}
-          <br />
-          <Button>Register Now</Button>
+          {/* <br />
+          <Button>Register Now</Button> */}
         </div>
       ) : (
         <Button onClick={handleReadMoreClick}>

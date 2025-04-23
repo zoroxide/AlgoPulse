@@ -101,27 +101,30 @@ const ProblemSet = () => {
 
   const handleShowMySubmissions = async (problemId) => {
     try {
-      const userSubmissions = submissions.filter(
-        (sub) => sub.problem._id === problemId
-      );
-      setSelectedProblemSubmissions(userSubmissions);
-      setIsModalOpen(true);
+        const userSubmissions = submissions
+            .filter((sub) => sub.problem._id === problemId)
+            .sort((a, b) => new Date(b.time) - new Date(a.time)); // Sort newest to oldest
+        setSelectedProblemSubmissions(userSubmissions);
+        setIsModalOpen(true);
     } catch (error) {
-      console.error("Error fetching user submissions:", error);
+        console.error("Error fetching user submissions:", error);
     }
-  };
+};
 
-  const handleShowAllSubmissions = async (problemId) => {
-    try {
+const handleShowAllSubmissions = async (problemId) => {
+  try {
       const response = await axiosInstance.get(
-        `/submissions/problem/${problemId}`
+          `/submissions/problem/${problemId}`
       );
-      setAllSubmissions(response.data);
+      const sortedSubmissions = response.data.sort(
+          (a, b) => new Date(b.time) - new Date(a.time) // Sort newest to oldest
+      );
+      setAllSubmissions(sortedSubmissions);
       setIsAllSubmissionsModalOpen(true);
-    } catch (error) {
+  } catch (error) {
       console.error("Error fetching all submissions:", error);
-    }
-  };
+  }
+};
 
   const handleSubmissionClick = (submission) => {
     setSelectedSubmission(submission);

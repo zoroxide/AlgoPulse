@@ -137,14 +137,25 @@ const ContestPage = () => {
 
     const submissionStatusTemplate = (rowData) => {
         const userSubmissions = submissions.filter(sub => sub.problem._id === rowData._id);
+    
         if (userSubmissions.length > 0) {
             const lastSubmission = userSubmissions[userSubmissions.length - 1];
-            return lastSubmission.status === "Accepted" ? (
-                <span className="text-green-600">Accepted 🎈</span>
-            ) : (
-                <span className="text-red-600">Rejected ✘</span>
-            );
+    
+            // Check if the user is the first to solve the problem
+            const firstAcceptedSubmission = submissions
+                .filter(sub => sub.problem._id === rowData._id && sub.status === "Accepted")
+                .sort((a, b) => new Date(a.time) - new Date(b.time))[0]; // Get the earliest accepted submission
+    
+            if (lastSubmission.status === "Accepted") {
+                if (firstAcceptedSubmission && firstAcceptedSubmission.user._id === user._id) {
+                    return <span className="text-blue-600">First Accepted 🎈🎈🎈</span>;
+                }
+                return <span className="text-green-600">Accepted 🎈</span>;
+            }
+    
+            return <span className="text-red-600">Rejected ✘</span>;
         }
+    
         return <span className="text-gray-600">No submissions made</span>;
     };
 
@@ -155,8 +166,11 @@ const ContestPage = () => {
     const handleShowSubmissions = async (problemId) => {
         try {
             const response = await axiosInstance.get(`/submissions/problem/${problemId}`);
+            // setSubmissions(response.data);
+            // const problemSubmissions = response.data.filter(sub => sub.problem._id === problemId);
             const sortedSubmissions = response.data.sort((a, b) => new Date(b.time) - new Date(a.time));
             setSelectedProblemSubmissions(sortedSubmissions);
+            setSubmissions(sortedSubmissions);
             setIsModalOpen(true);
         } catch (error) {
             console.error('Error fetching problem submissions:', error);
@@ -168,9 +182,20 @@ const ContestPage = () => {
         setIsSubmissionModalOpen(true);
     };
 
-    const balloonsTemplate = (rowData) => {
-        return '🎈'.repeat(rowData.problemsSolved);
-    };
+    // const balloonsTemplate = (rowData) => {
+    //     // Ensure rowData.submissions is defined
+    //     if (!rowData.submissions || !Array.isArray(rowData.submissions)) {
+    //         return ''; // Return no balloons if submissions are undefined or not an array
+    //     }
+    
+    //     // Ensure only one balloon per solved problem
+    //     const uniqueSolvedProblems = new Set(
+    //         rowData.submissions
+    //             .filter((submission) => submission.status === "Accepted")
+    //             .map((submission) => submission.problemId)
+    //     );
+    //     return '🎈'.repeat(uniqueSolvedProblems.size);
+    // };
 
     const rowClassName = (rowData) => {
         return rowData.user._id === user._id ? 'bg-green-100' : '';
@@ -239,7 +264,7 @@ const ContestPage = () => {
                             />
                             <Column
                                 field="submissionStatus"
-                                header="Submission Status"
+                                header="Last Submission Status"
                                 body={submissionStatusTemplate}
                                 style={{ minWidth: '12rem' }}
                             />
@@ -274,7 +299,7 @@ const ContestPage = () => {
                             <Column field="rank" header="Rank" body={(rowData, options) => options.rowIndex + 1} style={{ minWidth: '6rem' }} />
                             <Column field="user.username" header="User" body={userTemplate} filter filterPlaceholder="Search by username" style={{ minWidth: '12rem' }} />
                             <Column field="problemsSolved" header="Problems Solved" style={{ minWidth: '12rem' }} />
-                            <Column field="balloons" header="Balloons" body={balloonsTemplate} style={{ minWidth: '12rem' }} />
+                            {/* <Column field="balloons" header="Balloons" body={balloonsTemplate} style={{ minWidth: '12rem' }} /> */}
                             <Column field="penalty" header="Penalty" body={(rowData, options) => rowData.problemsSolved * options.rowIndex + 1} style={{ minWidth: '12rem' }} />
                         </DataTable>
                     </div>

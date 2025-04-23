@@ -1,20 +1,40 @@
-.explore-container {
-    display: flex;
-    gap: 20px;
-    padding: 20px;
-}
-
 .sheets-section {
-    flex: 2;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
 }
 
-.sheets-title {
-    font-size: 24px;
-    font-weight: bold; 
-    margin-bottom: 20px;
-    color: #333;
+.contests-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    justify-content: center;
 }
 
+.contest-card {
+    flex: 1 1 calc(33.333% - 1.5rem);
+    max-width: 300px; 
+    min-width: 250px; 
+}
+
+.horizontal-scroll {
+    display: flex;
+    overflow-x: auto; /* Enable horizontal scrolling */
+    gap: 1rem; /* Add spacing between cards */
+    padding: 1rem 0; /* Add padding for better spacing */
+    scroll-snap-type: x mandatory; /* Enable snap scrolling */
+}
+
+.horizontal-scroll::-webkit-scrollbar {
+    height: 8px; /* Adjust scrollbar height */
+}
+
+.horizontal-scroll::-webkit-scrollbar-thumb {
+    background-color: #ccc; /* Customize scrollbar color */
+    border-radius: 4px; /* Round scrollbar edges */
+}
+
+.horizontal-scroll > * {
+    flex: 0 0 auto; /* Prevent shrinking and allow horizontal alignment */
+    scroll-snap-align: start; /* Snap to the start of each card */
+}

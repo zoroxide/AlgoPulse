@@ -38,26 +38,11 @@ const Contests = () => {
     return (
         <div className="explore-container">
             <div className="sheets-section">
-                <h1 className="sheets-title">Contests</h1>
-                <br />
-                {upcomingContests.length > 0 && (
-                    <>
-                        <h2 className="sheets-subtitle">Upcoming Contests</h2>
-                        {upcomingContests.map((contest) => (
-                            <HomeCard
-                                key={contest._id}
-                                title={contest.name}
-                                content={contest.description}
-                                link={`/contest/${contest._id}`}
-                                contestId={contest._id}
-                                isUpcoming={true}
-                            />
-                        ))}
-                    </>
-                )}
+                <h1>Contests</h1>
+                
                 {runningContests.length > 0 && (
                     <>
-                        <h2 className="sheets-subtitle">Running Now</h2>
+                        <h1 className="sheets-subtitle">Running Now</h1>
                         {runningContests.map((contest) => (
                             <HomeCard
                                 key={contest._id}
@@ -70,9 +55,24 @@ const Contests = () => {
                         ))}
                     </>
                 )}
+                {upcomingContests.length > 0 && (
+                    <>
+                        <h1>Upcoming Contests</h1>
+                        {upcomingContests.map((contest) => (
+                            <HomeCard
+                                key={contest._id}
+                                title={contest.name}
+                                content={contest.description}
+                                link={`/contest/${contest._id}`}
+                                contestId={contest._id}
+                                isUpcoming={true}
+                            />
+                        ))}
+                    </>
+                )}
                 {completedContests.length > 0 && (
                     <>
-                        <h2 className="sheets-subtitle">Completed Contests</h2>
+                        <h1>Completed Contests</h1>
                         {completedContests.map((contest) => (
                             <HomeCard
                                 key={contest._id}
@@ -86,7 +86,7 @@ const Contests = () => {
                     </>
                 )}
                 {contests.length === 0 && (
-                    <Alert>No Contest Found</Alert>
+                    <Alert>No Contests available</Alert>
                 )}
             </div>
         </div>

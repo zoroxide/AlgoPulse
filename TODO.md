@@ -1,9 +1,7 @@
 # Client (front end)
 - Bugs:
-- - [ ] fix the contest editor in coloring issue in some languge and submiting
-- - [ ] fix sheets and contest editing page
-- - [ ] sort user submission from newist into oldest
-- - [ ] solve ballons issue in contest leaderboard
+- - [ ] fix achivement bar logical issue
+- - [ ] update homepage from errors in contests and add latest blogs
 - Tasks:
 - - [ ] add ability (admin page / buttons in problem tables) to admins to ignore submissions in contests and sheets
 - - [ ] Implement user editing modal in dashboard

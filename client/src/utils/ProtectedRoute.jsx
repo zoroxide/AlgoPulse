@@ -3,19 +3,28 @@ import { Navigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 
 const ProtectedRoute = ({ children, adminOnly = false }) => {
-  const { user } = useContext(AuthContext);
+  const { user, loading } = useContext(AuthContext);
 
+  // Wait for loading to complete
+  if (loading) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <div className="spinner"></div>
+      </div>
+    );
+  }
+
+  // Redirect to login if user is not authenticated
   if (!user) {
-    // User is not authenticated, redirect to login page
     return <Navigate to="/login" />;
   }
 
+  // Redirect to home if admin-only route and user is not an admin
   if (adminOnly && !user.isAdmin) {
-    // User is not an admin, redirect to home page or show an error message
     return <Navigate to="/" />;
   }
 
-  // User is authenticated (and an admin if required), render the children components
+  // Render children if user is authenticated and passes admin check
   return children;
 };
 

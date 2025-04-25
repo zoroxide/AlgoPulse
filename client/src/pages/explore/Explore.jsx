@@ -16,9 +16,15 @@ function Explore() {
 
   useEffect(() => {
     Promise.all([
-      axiosInstance.get("/sheets").then((response) => setSheets(response.data.slice(0, 3))),
-      axiosInstance.get("/contests").then((response) => setContests(response.data.slice(0, 3))),
-      axiosInstance.get("/blogs").then((response) => setBlogs(response.data.slice(0, 3))),
+      axiosInstance
+        .get("/sheets")
+        .then((response) => setSheets(response.data.slice(0, 3))),
+      axiosInstance
+        .get("/contests")
+        .then((response) => setContests(response.data.slice(0, 3))),
+      axiosInstance
+        .get("/blogs")
+        .then((response) => setBlogs(response.data.slice(0, 3))),
     ])
       .then(() => setLoading(false))
       .catch(() => {
@@ -44,19 +50,21 @@ function Explore() {
       <div className="left-section">
         {/* Sheets Section */}
         <div className="sheets-section">
-          <h1 className="sheets-title">🚴🏽‍♀️ Latest Sheets 🚴🏽‍♀️</h1>
+          <h1 className="sheets-title">Latest Sheets 🚴🏽‍♀️</h1>
           {sheets.length === 0 ? (
             <div>No sheets available.</div>
           ) : (
-            sheets.map((sheet) => (
-              <Sheet
-                key={sheet._id}
-                title={sheet.name}
-                content={sheet.content}
-                img={sheet.img}
-                sheetId={sheet._id}
-              />
-            ))
+            <div className="sheets-cards">
+              {sheets.map((sheet) => (
+                <Sheet
+                  key={sheet._id}
+                  title={sheet.name}
+                  content={sheet.content}
+                  img={sheet.img}
+                  sheetId={sheet._id}
+                />
+              ))}
+            </div>
           )}
         </div>
 
@@ -64,7 +72,7 @@ function Explore() {
 
         {/* Contests Section */}
         <div className="contests-section">
-          <h1 className="sheets-title">⚔️ Latest Contests ⚔️</h1>
+          <h1 className="sheets-title">Latest Contests ⚔️</h1>
           {contests.length === 0 ? (
             <div>No upcoming or running contests available.</div>
           ) : (
@@ -83,7 +91,7 @@ function Explore() {
 
         {/* Latest Blogs Section */}
         <div className="blogs-section">
-          <h1 className="sheets-title">📝 Latest Blogs 📝</h1>
+          <h1 className="sheets-title">Latest Blogs 📝</h1>
           <br />
           {blogs.length === 0 ? (
             <div>No blogs available.</div>

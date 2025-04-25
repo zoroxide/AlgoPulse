@@ -1,23 +1,24 @@
 .explore-container {
-    display: flex;
-    justify-content: space-between;
-  }
-  
-  .left-section {
-    flex: 2;
-    margin-right: 20px;
-  }
-  
-  .right-section {
-    flex: 1;
-  }
-  
-  .sheets-section, .contests-section {
-    margin-bottom: 20px;
-  }
-  
-  .sheets-title {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 10px;
-  }
+  display: flex;
+  justify-content: space-between;
+}
+
+.left-section {
+  flex: 2;
+  margin-right: 20px;
+}
+
+.right-section {
+  flex: 1;
+}
+
+.sheets-section,
+.contests-section {
+  margin-bottom: 20px;
+}
+
+.sheets-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}

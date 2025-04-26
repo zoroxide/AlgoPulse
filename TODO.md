@@ -1,11 +1,11 @@
 # Client (front end)
 - Bugs:
-- - [ ] fix achivement bar logical issue
-- - [ ] update homepage from errors in contests and add latest blogs
+- - [ ] admin deleting or premoting user
+- - [ ] editing contest and sheet must contain the existing data
+- - [ ] cpp and c are taking too long to compile and sometimes gets error
 - Tasks:
 - - [ ] add ability (admin page / buttons in problem tables) to admins to ignore submissions in contests and sheets
 - - [ ] Implement user editing modal in dashboard
-- - [ ] sort the admin action in problem set
 - - [ ] better UI !!!
 
 

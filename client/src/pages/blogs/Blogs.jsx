@@ -4,7 +4,6 @@ import { FaArrowUp, FaArrowDown } from 'react-icons/fa';
 import { AuthContext } from '../../context/AuthContext';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import ReactPaginate from 'react-paginate';
 import "react-quill/dist/quill.snow.css";
 
 const Blogs = () => {
@@ -185,19 +184,6 @@ const Blogs = () => {
                     </div>
                 </div>
             ))}
-            <ReactPaginate
-                previousLabel={'Previous'}
-                nextLabel={'Next'}
-                breakLabel={'...'}
-                breakClassName={'break-me'}
-                pageCount={pageCount}
-                marginPagesDisplayed={2}
-                pageRangeDisplayed={5}
-                onPageChange={handlePageClick}
-                containerClassName={'pagination'}
-                subContainerClassName={'pages pagination'}
-                activeClassName={'active'}
-            />
         </div>
     );
 };

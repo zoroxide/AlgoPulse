@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Sheet from "../../components/cards/ImageHomeCards";
 import HomeCard from "../../components/cards/HomeCard";
+import BlogPost from "../../components/cards/BlogPost";
 import Scoreboard from "../../components/scoreboard/Scoreboard";
 import "./Explore.css";
 import axiosInstance from "../../utils/axiosInstance";
@@ -14,23 +15,52 @@ function Explore() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const currentTime = new Date();
+
+  const upcomingContests = contests.filter(
+    (contest) => new Date(contest.startTime) > currentTime
+  );
+  const runningContests = contests.filter(
+    (contest) =>
+      new Date(contest.startTime) <= currentTime &&
+      new Date(contest.endTime) >= currentTime
+  );
+  const completedContests = contests.filter(
+    (contest) => new Date(contest.endTime) < currentTime
+  );
+
   useEffect(() => {
-    Promise.all([
-      axiosInstance
-        .get("/sheets")
-        .then((response) => setSheets(response.data.slice(0, 3))),
-      axiosInstance
-        .get("/contests")
-        .then((response) => setContests(response.data.slice(0, 3))),
-      axiosInstance
-        .get("/blogs")
-        .then((response) => setBlogs(response.data.slice(0, 3))),
-    ])
-      .then(() => setLoading(false))
-      .catch(() => {
-        setError("Failed to fetch data.");
+    const fetchData = async () => {
+      try {
+        const [sheetsRes, contestsRes, blogsRes] = await Promise.allSettled([
+          axiosInstance.get("/sheets"),
+          axiosInstance.get("/contests"),
+          axiosInstance.get("/blogs"),
+        ]);
+
+        if (sheetsRes.status === "fulfilled") {
+          console.log("Sheets data:", sheetsRes.value.data);
+          setSheets(sheetsRes.value.data.slice(0, 2));
+        }
+
+        if (contestsRes.status === "fulfilled") {
+          console.log("Contests data:", contestsRes.value.data);
+          setContests(contestsRes.value.data.slice(0, 2));
+        }
+
+        if (blogsRes.status === "fulfilled") {
+          console.log("Blogs data:", blogsRes.value.data);
+          setBlogs(blogsRes.value.data.slice(0, 2));
+        }
+      } catch (error) {
+        console.error("Unexpected error:", error);
+        setError("Unexpected error occurred.");
+      } finally {
         setLoading(false);
-      });
+      }
+    };
+
+    fetchData();
   }, []);
 
   if (loading) {
@@ -72,19 +102,56 @@ function Explore() {
 
         {/* Contests Section */}
         <div className="contests-section">
-          <h1 className="sheets-title">Latest Contests ⚔️</h1>
-          {contests.length === 0 ? (
-            <div>No upcoming or running contests available.</div>
-          ) : (
-            contests.map((contest) => (
-              <HomeCard
-                key={contest._id}
-                title={contest.name}
-                content={contest.content}
-                link={`/contest/${contest._id}`}
-              />
-            ))
-          )}
+          <div className="sheets-section">
+            <h1 className="sheets-title">Latest Contests ⚔️</h1>
+
+            {runningContests.length > 0 && (
+              <>
+                <h1 className="sheets-subtitle">Running Now</h1>
+                {runningContests.map((contest) => (
+                  <HomeCard
+                    key={contest._id}
+                    title={contest.name}
+                    content={contest.description}
+                    link={`/contest/${contest._id}`}
+                    contestId={contest._id}
+                    isRunning={true}
+                  />
+                ))}
+              </>
+            )}
+            {upcomingContests.length > 0 && (
+              <>
+                <h1>Upcoming Contests</h1>
+                {upcomingContests.map((contest) => (
+                  <HomeCard
+                    key={contest._id}
+                    title={contest.name}
+                    content={contest.description}
+                    link={`/contest/${contest._id}`}
+                    contestId={contest._id}
+                    isUpcoming={true}
+                  />
+                ))}
+              </>
+            )}
+            {completedContests.length > 0 && (
+              <>
+                <h1>Completed Contests</h1>
+                {completedContests.map((contest) => (
+                  <HomeCard
+                    key={contest._id}
+                    title={contest.name}
+                    content={contest.description}
+                    link={`/contest/${contest._id}`}
+                    contestId={contest._id}
+                    isCompleted={true}
+                  />
+                ))}
+              </>
+            )}
+            {contests.length === 0 && <Alert>No Contests available</Alert>}
+          </div>
         </div>
 
         <HR></HR>
@@ -92,16 +159,13 @@ function Explore() {
         {/* Latest Blogs Section */}
         <div className="blogs-section">
           <h1 className="sheets-title">Latest Blogs 📝</h1>
-          <br />
           {blogs.length === 0 ? (
             <div>No blogs available.</div>
           ) : (
             blogs.map((blog) => (
-              <HomeCard
+              <BlogPost
                 key={blog._id}
-                title={blog.title}
-                content={blog.content}
-                link={`/blog/${blog._id}`}
+                blog={blog}
               />
             ))
           )}

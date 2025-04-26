@@ -3,6 +3,9 @@
 @tailwind utilities;
 
 @import "flowbite/dist/flowbite.css";
+@import 'react-toastify/dist/ReactToastify.css';
+@import "react-quill/dist/quill.snow.css";
+
 
 .spinner {
   border: 4px solid rgba(0, 0, 0, 0.1);

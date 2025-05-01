@@ -9,14 +9,14 @@
 - [ ] Add and Test File Storage Support CDN
 - [ ] Add and Test Custom Template Support
 - [ ] Add and Test dart and rust language support
-- [ ] Add and Test time and memory limit and memory support
+- [ ] Add and Test time and memory limit support
 - [ ] Add and Test Execution time to the CE system Resoponse
 
 # Bugs
-### Client (front end)
+### Client (Front-end)
  - [ ] admin deleting or premoting user
  - [ ] editing contest and sheet must contain the existing data
  - [ ] cpp and c are taking too long to compile and sometimes gets error
 
-### Server (Backend)
+### Server (Back-end)
  - [ ] fix Scoring and counting system

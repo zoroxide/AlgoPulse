@@ -21,6 +21,7 @@ import Blogs from "./pages/blogs/Blogs";
 import AddBlog from "./pages/admin/AddBlog";
 import EditSheet from "./pages/admin/EditSheet";
 import EditContest from "./pages/admin/EditContest";
+import Playground from "./pages/playground/Playground";
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
@@ -45,6 +46,7 @@ function App() {
             <Route path="/contest/:contestId/problem/:problemId" element={<ProtectedRoute><ContestWorkspace /></ProtectedRoute>} />
             <Route path="/problems" element={<ProtectedRoute><ProblemSet /></ProtectedRoute>} />
             <Route path="/problem/:problemId" element={<ProtectedRoute><ProblemSetWorkspace /></ProtectedRoute>} />
+            <Route path="/playground" element={<ProtectedRoute><Playground /></ProtectedRoute>} />
 
             <Route path="/admin" element={<ProtectedRoute adminOnly={true}><Panel /></ProtectedRoute>} />
             <Route path="/admin/create-sheet" element={<ProtectedRoute adminOnly={true}><AddSheet /></ProtectedRoute>} />

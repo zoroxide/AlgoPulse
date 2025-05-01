@@ -33,6 +33,7 @@ const Nav = () => {
         <Navbar.Link onClick={() => navigate('/contests')}>Contests</Navbar.Link>
         <Navbar.Link onClick={() => navigate('/problems')}>Problem Sets</Navbar.Link>
         <Navbar.Link onClick={() => navigate('/blogs')}>Blogs</Navbar.Link>
+        <Navbar.Link onClick={() => navigate('/playground')}>Playground</Navbar.Link>
       </Navbar.Collapse>
       <div>
         {user ? (

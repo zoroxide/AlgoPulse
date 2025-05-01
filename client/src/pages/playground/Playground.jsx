@@ -122,7 +122,7 @@ const Playground = () => {
             onClick={() => setTheme(theme === "vs-dark" ? "vs-light" : "vs-dark")}
             color="dark"
           >
-            {theme === "vs-dark" ? "Light Mode" : "Dark Mode"}
+            {theme === "vs-dark" ? "☀️" : "🌚"}
           </Button>
         </div>
         <Button onClick={handleRunCode} color="green" size="md" disabled={isLoading}>

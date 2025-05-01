@@ -7,6 +7,7 @@ import "./Explore.css";
 import axiosInstance from "../../utils/axiosInstance";
 import { HR } from "flowbite-react";
 import { ClipLoader } from "react-spinners";
+import { Alert } from "flowbite-react";
 
 function Explore() {
   const [sheets, setSheets] = useState([]);
@@ -82,7 +83,7 @@ function Explore() {
         <div className="sheets-section">
           <h1 className="sheets-title">Latest Sheets 🚴🏽‍♀️</h1>
           {sheets.length === 0 ? (
-            <div>No sheets available.</div>
+            <Alert>No Sheets available</Alert>
           ) : (
             <div className="sheets-cards">
               {sheets.map((sheet) => (
@@ -160,7 +161,7 @@ function Explore() {
         <div className="blogs-section">
           <h1 className="sheets-title">Latest Blogs 📝</h1>
           {blogs.length === 0 ? (
-            <div>No blogs available.</div>
+            <Alert>No Blogs available</Alert>
           ) : (
             blogs.map((blog) => (
               <BlogPost

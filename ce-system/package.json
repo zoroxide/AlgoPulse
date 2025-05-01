@@ -1,5 +1,5 @@
 {
-  "name": "codex-api",
+  "name": "beatcode CE System",
   "version": "1.0.0",
   "description": "",
   "main": "src/index.js",
@@ -7,7 +7,7 @@
     "start": "node .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Jaagrav Seal",
+  "author": "Loay Mohamed",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",

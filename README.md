@@ -9,21 +9,22 @@
 
 # AlgoPulse
 Whether you are an Instructor or a student in Programming, AlgoPulse is Your Way to Success in any role
+try is with these credentials at https://algopulse.vercel.app : **email: demo@algopulse.com** and **password : demo**
 
 # Short Story
 If you are a (Student / Competitive Programmer / Preparing for an interview):
-this system will help you with:
+This system will help you with:
 - Solving coding questions in any language you like
-- organizing the workflow or the roadmap to a collection of problems
+- Organizing the workflow or the roadmap to a collection of problems
 - Real Contests (Coding Competitions) to practise
-- No Need for a third-party app to code like VS Code or any IDE, We have the Best Comprehensive Customizable Workspace
+- No Need for a third-party app to code like VS Code or any IDE, we have the Best Comprehensive Customizable Workspace
 
 If you are a (Teacher / ICPC Community leader/ Someone who monitors people in teaching programming):
-this system will help you with:
+This system will help you with:
 - Comprehensive (Admins / Moderators) Dashboard
 - Create Problems more efficiently and comprehensively than other websites
 - creating and organizing the workflow or the roadmap to a collection of problems for users to make it easy for them to lock on
-- Creating Real Contests (Coding Competitions) for users to practice and a Comprehensive dashboard and Ranking System
+- Creating Real Contests (Coding Competitions) for users to practice, and a Comprehensive dashboard and Ranking System
 - Comprehensive Role-based Users (Moderators / Admins) with Different Permissions 
 
 ### and more for both sides...
@@ -64,6 +65,10 @@ this system will help you with:
 
 ### Problem Set Page
 ![image](https://github.com/user-attachments/assets/888f8472-6b37-4e57-8d1a-0d8946d9830b)
+
+### Playgroung Page:
+![image](https://github.com/user-attachments/assets/ff7c8e50-63c3-44d7-a988-bea33ad8c408)
+
 
 
 # Admins Screenshots

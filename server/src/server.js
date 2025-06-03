@@ -1,7 +1,8 @@
 const express = require('express');
 const cors = require('cors');
-const connectDB = require('./config/database');
 const bodyParser = require('body-parser');
+//diys
+const connectDB = require('./config/database');
 const userRoutes = require('./routes/userRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const generalRoutes = require('./routes/generalRoutes');
